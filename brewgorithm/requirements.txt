@@ -1,0 +1,9 @@
+pika==0.11.0
+gensim
+keras
+h5py
+spacy
+tensorflow
+flask
+flask_api
+flask_cors
