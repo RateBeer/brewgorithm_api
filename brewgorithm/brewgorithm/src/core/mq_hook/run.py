@@ -1,10 +1,17 @@
 import pika
 from time import sleep
-from ...neural import beer2vec
+from ...neural import beer2vec, beer_emb
 
 
-def sendResponse(beers_map, ratebeer_id):
-  beer = beers_map[ratebeer_id]
+beers_map = {}
+
+
+def sendResponse(ratebeer_id):
+  if int(ratebeer_id) not in beers_map:
+    keywords = []
+  else:
+    beer = beers_map[int(ratebeer_id)]
+    keywords = beer_emb.most_similar(positive=[beer['vector']])
 
   responseConnection = pika.BlockingConnection(
       pika.ConnectionParameters(host='rabbitmq', port=5672))
@@ -12,31 +19,29 @@ def sendResponse(beers_map, ratebeer_id):
   responseChannel.queue_declare(queue='keywords')
   responseChannel.basic_publish(exchange='',
                                 routing_key='keywords',
-                                body=beer['keywords'])
+                                body=keywords)
   # above is pseudocode, need to fix
   responseConnection.close()
-  print(" [x] Sent", beer['keywords'])
+  print(" [x] Sent", keywords)
   # above is pseudocode, need to fix
 
 
-def create_callback():
-  beers = beer2vec.get_beer2vec()
-  beers_map = {}
-  for beer in beers:
-    beers_map[beer['RatebeerID']] = beer
-  def callback(ch, method, properties, body):
-    sendResponse(beers_map, body['params']['RatebeerID'])
-    # above is pseudocode, need to fix
-    print(" [x] Received %r" % body)
-  return callback
+def callback(ch, method, properties, body):
+  sendResponse(body['params']['RatebeerID'])
+  # above is pseudocode, need to fix
+  print(" [x] Received %r" % body)
+
 
 if __name__ == '__main__':
+  beers = beer2vec.get_beer2vec()
+  for beer in beers:
+    beers_map[int(beer['BeerID'])] = beer
   sleep(7)
   connection = pika.BlockingConnection(
       pika.ConnectionParameters(host='rabbitmq', port=5672))
   channel = connection.channel()
   channel.queue_declare(queue='hello')
-  channel.basic_consume(create_callback(),
+  channel.basic_consume(callback,
                         queue='hello',
                         no_ack=True)
   print(' [*] Waiting for messages. To exit press CTRL+C')
