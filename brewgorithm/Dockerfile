@@ -21,6 +21,8 @@ RUN python -m spacy download en
 # Install dev-only dependencies
 RUN pip3 install pytest
 
+COPY ./brewgorithm ./brewgorithm
+
 # Download beer models
 RUN python3 -m brewgorithm.src.neural.beer2vec.download
 RUN python3 -m brewgorithm.src.neural.beer_emb.download
@@ -28,7 +30,6 @@ RUN python3 -m brewgorithm.src.neural.beer_emb.download
 # Run tests
 RUN py.test brewgorithm/tests
 
-RUN python3 -m brewgorithm.src.core.flask_api.run
-# RUN python3 -m brewgorithm.flask_api.run
+CMD ["python3", "-m", "brewgorithm.src.core.flask_api.run"]
 # RUN python3 -m brewgorithm.mq_hook.run
 
