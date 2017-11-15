@@ -29,7 +29,6 @@ RUN python3 -m brewgorithm.src.neural.beer_emb.download
 
 # Run tests
 RUN py.test brewgorithm/tests
-
-CMD ["python3", "-m", "brewgorithm.src.core.flask_api.run"]
-# RUN python3 -m brewgorithm.mq_hook.run
+RUN python3 -m brewgorithm.src.core.flask_api.run &
+CMD ["python3", "-m", "brewgorithm.src.core.mq_hook.run"]
 

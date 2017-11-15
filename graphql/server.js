@@ -1,21 +1,21 @@
 var express = require('express');
 var graphqlHTTP = require('express-graphql');
-var { buildSchema } = require('graphql');
+var {buildSchema} = require('graphql');
 var amqp = require('amqplib/callback_api');
 
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
   type Query {
-    hello: String
+    query(ratebeer_id: Int!): [String]
   }
 `);
 
 // node sender
-function sendMessage () {
+function sendMessage (ratebeer_id) {
   amqp.connect('amqp://rabbitmq', function(err, conn) {
     conn.createChannel(function(err, ch) {
-      var q = 'hello';
-      var msg = 'Hello World!';
+      var q = 'node_input';
+      var msg = String(ratebeer_id);
 
       ch.assertQueue(q, {durable: false});
       // Note: on Node 6 Buffer.from(msg) should be used
@@ -39,13 +39,13 @@ function receiveMessage () {
 
     amqp.connect('amqp://rabbitmq', function(err, conn) {
       conn.createChannel(function(err, ch) {
-        var q = 'goodbye';
+        var q = 'keywords';
 
         ch.assertQueue(q, {durable: false});
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
         ch.consume(q, function(msg) {
           console.log(" [x] Received %s", msg.content.toString());
-          resolve(msg.content.toString());
+          resolve(JSON.parse(msg.content.toString()));
           isSuccess = true;
           conn.close();
 
@@ -57,16 +57,16 @@ function receiveMessage () {
   });
 }
 
-function processGraphqlQuery() {
-  sendMessage();
+function processGraphqlQuery(ratebeer_id) {
+  sendMessage(ratebeer_id);
   return receiveMessage();
 }
 
 // The root provides a resolver function for each API endpoint
 var root = {
-  hello: () => {
+  query: (args) => {
     // call rabbit mq here
-    return processGraphqlQuery();
+    return processGraphqlQuery(args.ratebeer_id);
   },
 };
 
@@ -82,5 +82,24 @@ const PORT = 4000;
 const HOST = '0.0.0.0';
 
 app.listen(PORT, HOST);
-console.log(`Running a GraphQL API server at ${HOST}:${PORT}/graphql`);
+console.log(`Running a GraphQL API Server at ${HOST}:${PORT}/graphql`);
 
+// call with '{ query(ratebeer_id: XXXX)}' to localhost:4000/graphql
+/* output:
+{
+  "data": {
+    "query": [
+      "guinness",
+      "stout",
+      "porter",
+      "guiness",
+      "stouts",
+      "schwarzbier",
+      "porters",
+      "coffee",
+      "oatmeal",
+      "espresso"
+    ]
+  }
+}
+*/
