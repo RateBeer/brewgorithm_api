@@ -28,6 +28,11 @@ class TestBeerEmb(unittest.TestCase):
     self.assertIn("chocolate", beer_emb.get_model())
     self.assertNotIn("awoefijwaoijfa", beer_emb.get_model())
 
-
+  def test_remove_duplicates(self):
+    self.assertTrue(beer_emb.remove_duplicates(['word', 'wordy', 'wordys']) == ['wordy'])
+    self.assertTrue(beer_emb.remove_duplicates(['Words', 'word']) == ['Words'])
+    self.assertTrue(set(beer_emb.remove_duplicates(['abc', 'abcde', 'abcfg', 'defg'])) == set(['abc', 'defg']))
+    self.assertTrue(beer_emb.remove_duplicates(['wormy', 'wordy']) == ['wormy'])
+    
 if __name__ == '__main__':
   unittest.main()

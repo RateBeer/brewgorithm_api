@@ -1,4 +1,0 @@
-from . import download
-from .load import embed_doc, embed_word, most_similar, get_model
-from .config import EMB_DIM
-

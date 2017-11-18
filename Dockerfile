@@ -8,7 +8,7 @@ RUN apt update \
 WORKDIR /service 
 
 # Copying pip requirement files 
-COPY ./requirements.txt ./requirements.txt
+COPY requirements.txt requirements.txt
 
 # Install python dependencies
 RUN export C_INCLUDE_PATH=/usr/include
@@ -29,6 +29,4 @@ RUN python3 -m brewgorithm.src.neural.beer_emb.download
 
 # Run tests
 RUN py.test brewgorithm/tests
-RUN python3 -m brewgorithm.src.core.flask_api.run &
-CMD ["python3", "-m", "brewgorithm.src.core.mq_hook.run"]
-
+CMD python3 -m brewgorithm.src.core.flask_api.run

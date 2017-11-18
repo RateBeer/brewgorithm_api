@@ -1,6 +1,7 @@
 from gensim.models import Word2Vec
 from pathlib import Path
 import numpy as np
+import editdistance
 from .config import MODEL_NAME, MODEL_DIR, EMB_DIM
 from ...utils import language
 
@@ -12,6 +13,47 @@ if not Path(MODEL_DIR + MODEL_NAME).is_file():
   model = None
 else:
   model = Word2Vec.load(MODEL_DIR + MODEL_NAME)
+
+
+def remove_duplicates(words):
+  """Remove duplicates from descriptor list
+
+  Duplicates are within two levenshtein edit distances away from each other,
+  or they are only different in capitalization.
+  Duplicates that end in y are preferred. Other optimizations
+  not yet implemented.
+
+  Examples:
+    Input: [space, spacey, spaceys]
+    Output: [spacey]
+
+    Input: [guiness, guinness, guinnesses]
+    Output: [guiness, guinnesses]
+    This is non-ideal, but will require more time to fix
+
+    Input: [abc, abcde, abcfg, efgh]
+    Output: [abc, efgh]
+    This is non-ideal, because output depends on order of input
+
+  Return:
+    unique list -- desciptor list without duplicates
+  """
+
+  unique_words = set()
+  for word in words:
+    is_unique = True
+    words_to_remove = []
+    for unique_word in unique_words:
+      if editdistance.eval(word.lower(), unique_word.lower()) <= 2:
+        if word[-1].lower() == 'y' and unique_word[-1].lower() != 'y':
+          words_to_remove.append(unique_word)
+        else:
+          is_unique = False
+    if is_unique:
+      unique_words.add(word)
+      for word_to_remove in words_to_remove:
+        unique_words.remove(word_to_remove)
+  return list(unique_words)
 
 
 def most_similar(positive=None, negative=None):
