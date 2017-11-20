@@ -10,13 +10,12 @@ cors = CORS(app)
 beers_map = {}
 
 
-@app.route("/descriptor", methods=['POST'])
-def get_descriptor():
+@app.route("/descriptors/<ratebeer_id>", methods=['GET'])
+def get_descriptor(ratebeer_id):
   """For a text query, pipe it through the gate and return the best answer."""
-  ratebeer_id = int(request.data.get('id', ''))
-  if ratebeer_id not in beers_map:
+  if int(ratebeer_id) not in beers_map:
     return jsonify({'response': None})
-  beer = beers_map[ratebeer_id]
+  beer = beers_map[int(ratebeer_id)]
   descriptors = [x[0] for x in beer_emb.most_similar(positive=[beer['vector']])]
   unique_descriptors = beer_emb.remove_duplicates(descriptors)
   return jsonify({'response': unique_descriptors})
@@ -26,7 +25,6 @@ def get_descriptor():
 def get_recommendations():
   """For a text query, pipe it through the gate and return the best answer."""
   content = request.json
-
   try:
     assert('ids' in content)
     assert(len(content['ids']) > 0)
