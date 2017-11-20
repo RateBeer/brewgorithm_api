@@ -8,10 +8,9 @@ LARGE_NAME = "server256.model"
 X_LARGE_NAME = "server512.model"
 MODEL_NAME = X_LARGE_NAME
 
-SMALL_URL = "https://brewgorithmdevkit.nyc3.digitaloceanspaces.com/server64.model"
-MID_URL = "https://brewgorithmdevkit.nyc3.digitaloceanspaces.com/server128.model"
-LARGE_URL = "https://brewgorithmdevkit.nyc3.digitaloceanspaces.com/server256.model"
-X_LARGE_URL = "https://brewgorithmdevkit.nyc3.digitaloceanspaces.com/server512.model"
+SMALL_URL = "https://d3t9movkb8ddzf.cloudfront.net/17-11-20/server64.model"
+MID_URL = "https://d3t9movkb8ddzf.cloudfront.net/17-11-20/server128.model"
+LARGE_URL = "https://d3t9movkb8ddzf.cloudfront.net/17-11-20/server256.model"
+X_LARGE_URL = "https://d3t9movkb8ddzf.cloudfront.net/17-11-20/server512.model"
 
 EMB_DIM = 512
-
