@@ -23,6 +23,9 @@ RUN pip3 install pytest
 
 COPY ./brewgorithm ./brewgorithm
 
+RUN mkdir -p /service/brewgorithm/src/neural/beer2vec/models/
+RUN mkdir -p /service/brewgorithm/src/neural/beer_emb/models/
+
 # Download beer models
 RUN python3 -m brewgorithm.src.neural.beer2vec.download
 RUN python3 -m brewgorithm.src.neural.beer_emb.download
