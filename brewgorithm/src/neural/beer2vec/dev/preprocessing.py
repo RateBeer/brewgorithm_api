@@ -23,7 +23,7 @@ def gen_beer_vectors(beer_ids, label_features=["BeerNamePlain", "ABV"]):
     try:
       labels = pipeline.fetch_beer(beer_id, label_features)
     except KeyError:
-      continue
+      raise KeyError(beer_id)
     except UnicodeDecodeError:
       continue
     i = 0

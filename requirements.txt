@@ -16,3 +16,6 @@ flask_cors
 
 # Util
 editdistance
+
+# AWS S3 access
+boto3

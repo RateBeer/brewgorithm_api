@@ -14,12 +14,14 @@ beers_map = {}
 def get_descriptors(ratebeer_id):
   """For a text query, pipe it through the gate and return the best answer."""
   if int(ratebeer_id) not in beers_map:
-    return jsonify({'response': None, 'statusCode': 500,
+    response = jsonify({'response': None,
         'error': "ratebeer_id " + ratebeer_id + " not found"})
+    response.status_code = 500
+    return response
   beer = beers_map[int(ratebeer_id)]
   descriptors = [x[0] for x in beer_emb.most_similar(positive=[beer['vector']])]
   unique_descriptors = beer_emb.remove_duplicates(descriptors)
-  return jsonify({'descriptors': unique_descriptors, 'statusCode': 200})
+  return jsonify({'descriptors': unique_descriptors})
 
 
 @app.route("/recommend", methods=['POST'])
@@ -29,10 +31,12 @@ def get_recommendations():
   try:
     assert('ids' in content)
     assert(len(content['ids']) > 0)
-    return jsonify({'statusCode': 200, 'response': recommender.similar_beers([
+    return jsonify({'response': recommender.similar_beers([
         int(x) for x in content['ids']], beers_map, beer_emb.EMB_DIM)})
   except (KeyError, AssertionError):
-    return jsonify({'response': None, 'statusCode': 500})
+    response = jsonify({'response': None})
+    response.status_code = 500
+    return response
 
 @app.route("/update_vectors", methods=['POST'])
 def update_vectors():
@@ -45,16 +49,26 @@ def update_vectors():
     try:
       beer2vec.dev.train.gen_beer2vec(beer2vec.config.MODEL_NAME,
           [int(x) for x in content['ids']], should_overwrite=True)
-      return jsonify({'statusCode': 200, 'status': "success"})
+      return jsonify({'response': "success"})
+    except KeyError as e:
+      response = jsonify({'response': "failure", 'error': 
+          "Beer id not found in database: {}".format(e)})
+      response.status_code = 500
+      return response
     except AssertionError as e:
-      return jsonify({'statusCode': 500, 'status': 'failure', 'error': 
-          "not enough reviews to train for beer: {}".format(e)})
+      response = jsonify({'response': "failure", 'error': 
+          "Not enough reviews to train for beer: {}".format(e)})
+      response.status_code = 500
+      return response
     except Exception as e:
-      return jsonify({'statusCode': 500, 'status': 'failure', 'error': 
-          "training crashed"})
+      response = jsonify({'response': "failure", 'error': "Training crashed"})
+      response.status_code = 500
+      return response
 
   except (KeyError, AssertionError):
-    return jsonify({'response': None, 'statusCode': 500})
+    response = jsonify({'response': None})
+    response.status_code = 500
+    return response
 
 if __name__ == "__main__":
   beers = beer2vec.get_beer2vec()

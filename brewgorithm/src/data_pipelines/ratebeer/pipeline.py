@@ -1,12 +1,12 @@
 import pymssql
 import pickle
-from ..config import SQL_SERVER, SQL_USR, SQL_PASS, MODEL_DIR
+from ..config import SQL_SERVER, SQL_USR, SQL_PASS, MODEL_DIR, DATABASE
 from ...utils import language
 
 filter_nulls = language.cleaning.filter_nulls
 
 def fetch_beer(beer_id, beer_features=[]):
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, "RateBeer", charset="CP1252")
+  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
       select * from Beer
@@ -23,7 +23,7 @@ def fetch_beer(beer_id, beer_features=[]):
 
 
 def fetch_beer_reviews(beer_id, review_features=[]):
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, "RateBeer", charset="CP1252")
+  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
       select *
@@ -55,8 +55,8 @@ def fetch_beer_reviews(beer_id, review_features=[]):
 
 
 def fetch_beer_ids():
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, "RateBeer", charset="CP1252")
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, "RateBeer", charset="CP1252")
+  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
+  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
       select BeerID from Beer order by Beer.RateCount DESC

@@ -1,6 +1,8 @@
 # from multiprocessing import Pool
 import pickle
 import numpy as np
+import boto
+from boto.s3.key import Key
 
 from .. import config
 from .preprocessing import gen_beer_vectors
@@ -65,8 +67,21 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
       continue
 
   pickle.dump(beer_labels, open(config.MODEL_DIR + model_name, 'wb'))
+  save_beer2vec_s3(model_name)
+  
   return beer_labels
 
+def save_beer2vec_s3(model_name):
+  '''Uploads the beer2vec model file to s3, overwriting the existing model'''
+
+  conn = boto.connect_s3(config.AWS_ACCESS_KEY_ID, config.AWS_SECRET_ACCESS_KEY)
+  brewgorithm_bucket = conn.get_bucket(config.S3_BUCKET)
+  s3_file = Key(brewgorithm_bucket)
+  s3_file.key = config.S3_PATH + model_name
+  s3_file.set_contents_from_filename(config.MODEL_DIR + model_name, replace=True)
+  s3_file.set_acl('public-read')
+
+  return True
 
 if __name__ == "__main__":
   beer_labels = gen_beer2vec(config.MODEL_NAME, gen_ids(20000))
