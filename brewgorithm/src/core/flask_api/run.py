@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from flask.ext.api import FlaskAPI
+from flask_api import FlaskAPI
 from flask_cors import CORS
 from ...neural import beer2vec, beer_emb, recommender
 
@@ -11,10 +11,11 @@ beers_map = {}
 
 
 @app.route("/descriptors/<ratebeer_id>", methods=['GET'])
-def get_descriptor(ratebeer_id):
+def get_descriptors(ratebeer_id):
   """For a text query, pipe it through the gate and return the best answer."""
   if int(ratebeer_id) not in beers_map:
-    return jsonify({'response': None, 'statusCode': 500, 'error': "ratebeer_id " + ratebeer_id + " not found"})
+    return jsonify({'response': None, 'statusCode': 500,
+        'error': "ratebeer_id " + ratebeer_id + " not found"})
   beer = beers_map[int(ratebeer_id)]
   descriptors = [x[0] for x in beer_emb.most_similar(positive=[beer['vector']])]
   unique_descriptors = beer_emb.remove_duplicates(descriptors)
@@ -33,6 +34,27 @@ def get_recommendations():
   except (KeyError, AssertionError):
     return jsonify({'response': None, 'statusCode': 500})
 
+@app.route("/update_vectors", methods=['POST'])
+def update_vectors():
+  """For a json array, train the selected beer ids and return success / fail."""
+  content = request.json
+  try:
+    assert('ids' in content)
+    assert(len(content['ids']) > 0)
+
+    try:
+      beer2vec.dev.train.gen_beer2vec(beer2vec.config.MODEL_NAME,
+          [int(x) for x in content['ids']], should_overwrite=True)
+      return jsonify({'statusCode': 200, 'status': "success"})
+    except AssertionError as e:
+      return jsonify({'statusCode': 500, 'status': 'failure', 'error': 
+          "not enough reviews to train for beer: {}".format(e)})
+    except Exception as e:
+      return jsonify({'statusCode': 500, 'status': 'failure', 'error': 
+          "training crashed"})
+
+  except (KeyError, AssertionError):
+    return jsonify({'response': None, 'statusCode': 500})
 
 if __name__ == "__main__":
   beers = beer2vec.get_beer2vec()

@@ -1,0 +1,1 @@
+from .ratebeer import pipeline as ratebeer
