@@ -56,7 +56,6 @@ def fetch_beer_reviews(beer_id, review_features=[]):
 
 def fetch_beer_ids():
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
       select BeerID from Beer order by Beer.RateCount DESC
