@@ -19,6 +19,9 @@ services:
         - com.df.reqPathSearch=/model
         - com.df.serviceDomain=${SERVICE_DOMAIN}
         - com.df.httpsOnly=true
+        - com.df.alertName=memlimit
+        - com.df.alertIf=@service_mem_limit:0.8
+        - com.df.alertFor=30s
       mode: replicated
       placement:
         constraints: 
