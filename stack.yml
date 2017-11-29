@@ -11,6 +11,14 @@ services:
     networks:
       - api
     deploy:
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.port=5000
+        - com.df.servicePath=/model
+        - com.df.reqPathSearch=/model
+        - com.df.serviceDomain=${SERVICE_DOMAIN}
+        - com.df.httpsOnly=true
       mode: replicated
       placement:
         constraints: 
