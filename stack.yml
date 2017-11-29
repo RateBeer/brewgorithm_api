@@ -4,12 +4,16 @@ networks:
   api:
     external: true
 
+  proxy:
+    external: true
+
 services:
 
   api:
     image: brewgorithm/brewgorithm-api:${TAG:-latest}
     networks:
       - api
+      - proxy
     deploy:
       labels:
         - com.df.notify=true
