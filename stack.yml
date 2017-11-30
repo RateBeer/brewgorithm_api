@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 networks:
   api:
@@ -20,3 +20,18 @@ services:
           memory: 1G
         limits:
           memory: 1G
+    secrets:
+      - db_username
+      - db_password
+      - aws_access_key_id
+      - aws_secret_access_key
+
+secrets:
+  db_username:
+    external: true
+  db_password:
+    external: true
+  aws_access_key_id:
+    external: true
+  aws_secret_access_key:
+    external: true

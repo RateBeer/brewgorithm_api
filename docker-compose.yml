@@ -9,4 +9,8 @@ services:
     build: .
     ports:
       - 5000:5000
-
+    volumes:
+      - ../../secrets/brewgorithm_api/db_username:/run/secrets/db_username
+      - ../../secrets/brewgorithm_api/db_password:/run/secrets/db_password
+      - ../../secrets/brewgorithm_api/aws_access_key_id:/run/secrets/aws_access_key_id
+      - ../../secrets/brewgorithm_api/aws_secret_access_key:/run/secrets/aws_secret_access_key

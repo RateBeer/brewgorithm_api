@@ -1,11 +1,17 @@
 import pymssql
 import pickle
-from ..config import SQL_SERVER, SQL_USR, SQL_PASS, MODEL_DIR, DATABASE
+from ..config import SQL_SERVER, MODEL_DIR, DATABASE
 from ...utils import language
 
 filter_nulls = language.cleaning.filter_nulls
 
+def get_sql_credentials():
+  sql_usr = open("/run/secrets/db_username").read().strip()
+  sql_pass = open("/run/secrets/db_password").read().strip()
+  return sql_usr, sql_pass
+
 def fetch_beer(beer_id, beer_features=[]):
+  SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
@@ -23,6 +29,7 @@ def fetch_beer(beer_id, beer_features=[]):
 
 
 def fetch_beer_reviews(beer_id, review_features=[]):
+  SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
@@ -55,6 +62,7 @@ def fetch_beer_reviews(beer_id, review_features=[]):
 
 
 def fetch_beer_ids():
+  SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""

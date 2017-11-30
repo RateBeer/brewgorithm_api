@@ -74,7 +74,10 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
 def save_beer2vec_s3(model_name):
   '''Uploads the beer2vec model file to s3, overwriting the existing model'''
 
-  conn = boto.connect_s3(config.AWS_ACCESS_KEY_ID, config.AWS_SECRET_ACCESS_KEY)
+  aws_access_key_id = open("/run/secrets/aws_access_key_id").read().strip()
+  aws_secret_access_key = open("/run/secrets/aws_secret_access_key").read().strip()
+
+  conn = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
   brewgorithm_bucket = conn.get_bucket(config.S3_BUCKET)
   s3_file = Key(brewgorithm_bucket)
   s3_file.key = config.S3_PATH + model_name
@@ -86,4 +89,3 @@ def save_beer2vec_s3(model_name):
 if __name__ == "__main__":
   beer_labels = gen_beer2vec(config.MODEL_NAME, gen_ids(20000))
   print("Training complete")
-
