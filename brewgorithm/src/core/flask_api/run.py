@@ -34,6 +34,20 @@ def get_recommendations():
     return jsonify({'response': None, 'statusCode': 500})
 
 
+@app.route("/recommend_subset", methods=['POST'])
+def get_recommendations():
+  """For a text query, pipe it through the gate and return the best answer."""
+  content = request.json
+  try:
+    assert('ids' in content)
+    assert('exclude_ids' in content)
+    assert(len(content['ids']) > 0)
+    return jsonify({'statusCode': 200, 'response': recommender.similar_beers([
+        int(x) for x in content['ids']], beers_map, beer_emb.EMB_DIM, exclude=[int(x) for x in content['exclude_ids']])})
+  except (KeyError, AssertionError):
+    return jsonify({'response': None, 'statusCode': 500})
+
+
 if __name__ == "__main__":
   beers = beer2vec.get_beer2vec()
   for beer in beers:
