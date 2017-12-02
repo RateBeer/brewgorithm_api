@@ -1,3 +1,4 @@
+import os
 import pymssql
 import pickle
 from ..config import SQL_SERVER, MODEL_DIR, DATABASE
@@ -6,8 +7,8 @@ from ...utils import language
 filter_nulls = language.cleaning.filter_nulls
 
 def get_sql_credentials():
-  sql_usr = open("/run/secrets/db_username").read().strip()
-  sql_pass = open("/run/secrets/db_password").read().strip()
+  sql_usr = open("/run/secrets/" + os.environ["RATEBEER_DB_USERNAME"]).read().strip()
+  sql_pass = open("/run/secrets/" + os.environ["RATEBEER_DB_PASSWORD"]).read().strip()
   return sql_usr, sql_pass
 
 def fetch_beer(beer_id, beer_features=[]):

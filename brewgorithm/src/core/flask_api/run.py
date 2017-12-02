@@ -1,3 +1,4 @@
+import os
 from flask import request, jsonify
 from flask_api import FlaskAPI
 from flask_cors import CORS
@@ -38,37 +39,38 @@ def get_recommendations():
     response.status_code = 500
     return response
 
-@app.route("/update_vectors", methods=['POST'])
-def update_vectors():
-  """For a json array, train the selected beer ids and return success / fail."""
-  content = request.json
-  try:
-    assert('ids' in content)
-    assert(len(content['ids']) > 0)
-
+if int(os.environ["WRITE_API"]) == 1:
+  @app.route("/update_vectors", methods=['POST'])
+  def update_vectors():
+    """For a json array, train the selected beer ids and return success / fail."""
+    content = request.json
     try:
-      beer2vec.dev.train.gen_beer2vec(beer2vec.config.MODEL_NAME,
-          [int(x) for x in content['ids']], should_overwrite=True)
-      return jsonify({'response': "success"})
-    except KeyError as e:
-      response = jsonify({'response': "failure", 'error': 
-          "Beer id not found in database: {}".format(e)})
-      response.status_code = 500
-      return response
-    except AssertionError as e:
-      response = jsonify({'response': "failure", 'error': 
-          "Not enough reviews to train for beer: {}".format(e)})
-      response.status_code = 500
-      return response
-    except Exception as e:
-      response = jsonify({'response': "failure", 'error': "Training crashed"})
-      response.status_code = 500
-      return response
+      assert('ids' in content)
+      assert(len(content['ids']) > 0)
 
-  except (KeyError, AssertionError):
-    response = jsonify({'response': None})
-    response.status_code = 500
-    return response
+      try:
+        beer2vec.dev.train.gen_beer2vec(beer2vec.config.MODEL_NAME,
+            [int(x) for x in content['ids']], should_overwrite=True)
+        return jsonify({'response': "success"})
+      except KeyError as e:
+        response = jsonify({'response': "failure", 'error': 
+            "Beer id not found in database: {}".format(e)})
+        response.status_code = 500
+        return response
+      except AssertionError as e:
+        response = jsonify({'response': "failure", 'error': 
+            "Not enough reviews to train for beer: {}".format(e)})
+        response.status_code = 500
+        return response
+      except Exception as e:
+        response = jsonify({'response': "failure", 'error': "Training crashed"})
+        response.status_code = 500
+        return response
+
+    except (KeyError, AssertionError):
+      response = jsonify({'response': None})
+      response.status_code = 500
+      return response
 
 if __name__ == "__main__":
   beers = beer2vec.get_beer2vec()

@@ -8,8 +8,16 @@ services:
 
   api:
     image: brewgorithm/brewgorithm-api:${TAG:-latest}
+    environment:
+      RATEBEER_DB_USERNAME: ratebeer_db_username
+      RATEBEER_DB_PASSWORD: ratebeer_db_password
+      RATEBEER_AWS_ID: ratebeer_aws_id
+      RATEBEER_AWS_KEY: ratebeer_aws_key
+      WRITE_API: 0
     networks:
       - api
+    ports:
+      - 5000:5000
     deploy:
       mode: replicated
       placement:
@@ -21,17 +29,46 @@ services:
         limits:
           memory: 1G
     secrets:
-      - db_username
-      - db_password
-      - aws_access_key_id
-      - aws_secret_access_key
+      - ratebeer_db_username
+      - ratebeer_db_password
+      - ratebeer_aws_id
+      - ratebeer_aws_key
+
+
+  write_api:
+    image: brewgorithm/brewgorithm-api:${TAG:-latest}
+    environment:
+      RATEBEER_DB_USERNAME: ratebeer_db_username
+      RATEBEER_DB_PASSWORD: ratebeer_db_password
+      RATEBEER_AWS_ID: ratebeer_aws_id
+      RATEBEER_AWS_KEY: ratebeer_aws_key
+      WRITE_API: 1
+    networks:
+      - api
+    ports:
+      - 5001:5000
+    deploy:
+      mode: replicated
+      placement:
+        constraints: 
+          - node.role == worker
+      resources:
+        reservations:
+          memory: 1G
+        limits:
+          memory: 1G
+    secrets:
+      - ratebeer_db_username
+      - ratebeer_db_password
+      - ratebeer_aws_id
+      - ratebeer_aws_key
 
 secrets:
-  db_username:
+  ratebeer_db_username:
     external: true
-  db_password:
+  ratebeer_db_password:
     external: true
-  aws_access_key_id:
+  ratebeer_aws_id:
     external: true
-  aws_secret_access_key:
+  ratebeer_aws_key:
     external: true

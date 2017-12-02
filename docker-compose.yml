@@ -7,10 +7,32 @@ services:
 
   api:
     build: .
+    environment:
+      RATEBEER_DB_USERNAME: ratebeer_db_username
+      RATEBEER_DB_PASSWORD: ratebeer_db_password
+      RATEBEER_AWS_ID: ratebeer_aws_id
+      RATEBEER_AWS_KEY: ratebeer_aws_key
+      WRITE_API: 0
     ports:
       - 5000:5000
     volumes:
-      - ../../secrets/brewgorithm_api/db_username:/run/secrets/db_username
-      - ../../secrets/brewgorithm_api/db_password:/run/secrets/db_password
-      - ../../secrets/brewgorithm_api/aws_access_key_id:/run/secrets/aws_access_key_id
-      - ../../secrets/brewgorithm_api/aws_secret_access_key:/run/secrets/aws_secret_access_key
+      - ../../secrets/brewgorithm_api/ratebeer_db_username:/run/secrets/ratebeer_db_username
+      - ../../secrets/brewgorithm_api/ratebeer_db_password:/run/secrets/ratebeer_db_password
+      - ../../secrets/brewgorithm_api/ratebeer_aws_id:/run/secrets/ratebeer_aws_id
+      - ../../secrets/brewgorithm_api/ratebeer_aws_key:/run/secrets/ratebeer_aws_key
+
+  write_api:
+    build: .
+    environment:
+      RATEBEER_DB_USERNAME: ratebeer_db_username
+      RATEBEER_DB_PASSWORD: ratebeer_db_password
+      RATEBEER_AWS_ID: ratebeer_aws_id
+      RATEBEER_AWS_KEY: ratebeer_aws_key
+      WRITE_API: 1
+    ports:
+      - 5001:5000
+    volumes:
+      - ../../secrets/brewgorithm_api/ratebeer_db_username:/run/secrets/ratebeer_db_username
+      - ../../secrets/brewgorithm_api/ratebeer_db_password:/run/secrets/ratebeer_db_password
+      - ../../secrets/brewgorithm_api/ratebeer_aws_id:/run/secrets/ratebeer_aws_id
+      - ../../secrets/brewgorithm_api/ratebeer_aws_key:/run/secrets/ratebeer_aws_key
