@@ -40,10 +40,10 @@ def get_subset_recommendations():
   content = request.json
   try:
     assert('ids' in content)
-    assert('exclude_ids' in content)
+    assert('subset' in content)
     assert(len(content['ids']) > 0)
     return jsonify({'statusCode': 200, 'response': recommender.similar_beers([
-        int(x) for x in content['ids']], beers_map, beer_emb.EMB_DIM, exclude=[int(x) for x in content['exclude_ids']])})
+        int(x) for x in content['ids']], beers_map, beer_emb.EMB_DIM, subset=[int(x) for x in content['subset']])})
   except (KeyError, AssertionError):
     return jsonify({'response': None, 'statusCode': 500})
 
