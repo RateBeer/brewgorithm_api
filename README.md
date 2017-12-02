@@ -27,7 +27,7 @@ If all are valid, you will get back:
 
 ##### Get beer recommendations based off list of beers from a subset:
 Post request: `$API/recommend_subset`.
-JSON body: `{'ids': [<id1>, <id2>...], 'exclude_ids': [<e_id1>, <e_id2>...]}`
+JSON body: `{'ids': [<id1>, <id2>...], 'subset': [<e_id1>, <e_id2>...]}`
 If any ids are invalid, you will get back:
 `{'response': None, 'statusCode': 500}`
 If all ids are valid, you will get back:
