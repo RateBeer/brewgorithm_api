@@ -39,6 +39,25 @@ def get_recommendations():
     response.status_code = 500
     return response
 
+@app.route("/refresh_model", methods=['GET'])
+def refresh_model():
+  """Pull the latest model from s3, and update the model in memory"""
+  beer2vec.refresh_beer2vec_model()
+
+  try:
+    beers_map = {}
+    beers = beer2vec.get_beer2vec()
+    for beer in beers:
+      beers_map[int(beer['BeerID'])] = beer
+  
+    return jsonify({'response': "success"})
+    
+  except KeyError:
+    response = jsonify({'response': None})
+    response.status_code = 500
+    return response
+
+
 if int(os.environ["WRITE_API"]) == 1:
   @app.route("/update_vectors", methods=['POST'])
   def update_vectors():
