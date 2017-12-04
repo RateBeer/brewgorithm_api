@@ -16,6 +16,7 @@ pipeline {
           registry = 'brewgorithm'
           container = 'brewgorithm-api'
           stackName = 'brewgorithm'
+          domain = 'api.brewgorithm.com'
           currentBuild.displayName = dateFormat.format(new Date()) + "-" + env.BUILD_NUMBER
           tag = currentBuild.displayName
         }
@@ -46,7 +47,10 @@ pipeline {
           "TAG=${tag}"
         ]) {
           sh "docker network create --driver overlay api || echo 'Network creation failed. It probably already exists.'"
-          dockerStackDeploy(stackName)
+          script {
+            env.SERVICE_DOMAIN = domain
+          }
+          dockerStackDeployWithDomain(stackName, domain)
         }
         dockerLogout()
       }
