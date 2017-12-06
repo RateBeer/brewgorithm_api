@@ -7,8 +7,10 @@ def similar_beers(beer_ids, beers_map, emb_dim, subset=None):
 
   for beer_id in beer_ids:
     if beer_id not in beers_map:
-      raise KeyError
+      continue
     profile += beers_map[int(beer_id)]['vector']
+  if not np.any(profile):
+    raise KeyError
 
   def __scorer(key_val_pair):
     if key_val_pair[1]['BeerID'] in beer_ids:
