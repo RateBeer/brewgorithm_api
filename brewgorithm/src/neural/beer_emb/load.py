@@ -8,6 +8,10 @@ from ...utils import language
 clean_word = language.cleaning.clean_word
 parsing = language.parsing
 
+### ADD TRADEMARKS HERE
+### ex: = ["budweiser", "abi"]
+trademarks = ["budweiser"]
+
 
 if not Path(MODEL_DIR + MODEL_NAME).is_file():
   model = None
@@ -53,7 +57,8 @@ def remove_duplicates(words):
       unique_words.add(word)
       for word_to_remove in words_to_remove:
         unique_words.remove(word_to_remove)
-  return list(unique_words)
+
+  return [word for word in unique_words if word not in trademarks]
 
 
 def most_similar(positive=None, negative=None):
