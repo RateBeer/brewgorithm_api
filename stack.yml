@@ -14,8 +14,8 @@ services:
     environment:
       RATEBEER_DB_USERNAME: ratebeer_db_username
       RATEBEER_DB_PASSWORD: ratebeer_db_password
-      RATEBEER_AWS_ID: ratebeer_aws_id
-      RATEBEER_AWS_KEY: ratebeer_aws_key
+      AWS_ID_SECRET: brewgorithm_aws_id
+      AWS_KEY_SECRET: brewgorithm_aws_key
       WRITE_API: 0
     networks:
       - api
@@ -43,8 +43,8 @@ services:
     secrets:
       - ratebeer_db_username
       - ratebeer_db_password
-      - ratebeer_aws_id
-      - ratebeer_aws_key
+      - brewgorithm_aws_id
+      - brewgorithm_aws_key
 
 
   write-api:
@@ -52,8 +52,8 @@ services:
     environment:
       RATEBEER_DB_USERNAME: ratebeer_db_username
       RATEBEER_DB_PASSWORD: ratebeer_db_password
-      RATEBEER_AWS_ID: ratebeer_aws_id
-      RATEBEER_AWS_KEY: ratebeer_aws_key
+      AWS_ID_SECRET: brewgorithm_aws_id
+      AWS_KEY_SECRET: brewgorithm_aws_key
       WRITE_API: 1
     networks:
       - api
@@ -81,15 +81,15 @@ services:
     secrets:
       - ratebeer_db_username
       - ratebeer_db_password
-      - ratebeer_aws_id
-      - ratebeer_aws_key
+      - brewgorithm_aws_id
+      - brewgorithm_aws_key
 
 secrets:
   ratebeer_db_username:
     external: true
   ratebeer_db_password:
     external: true
-  ratebeer_aws_id:
+  brewgorithm_aws_id:
     external: true
-  ratebeer_aws_key:
+  brewgorithm_aws_key:
     external: true
