@@ -23,6 +23,8 @@ RUN pip3 install pytest
 
 COPY ./brewgorithm ./brewgorithm
 
+ENV WRITE_API 1
+
 RUN mkdir -p /service/brewgorithm/src/neural/beer2vec/models/
 RUN mkdir -p /service/brewgorithm/src/neural/beer_emb/models/
 

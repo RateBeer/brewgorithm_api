@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 networks:
   api:
@@ -11,6 +11,12 @@ services:
 
   api:
     image: brewgorithm/brewgorithm-api:${TAG:-latest}
+    environment:
+      RATEBEER_DB_USERNAME: ratebeer_db_username
+      RATEBEER_DB_PASSWORD: ratebeer_db_password
+      RATEBEER_AWS_ID: ratebeer_aws_id
+      RATEBEER_AWS_KEY: ratebeer_aws_key
+      WRITE_API: 0
     networks:
       - api
       - proxy
@@ -34,3 +40,56 @@ services:
           memory: 1G
         limits:
           memory: 1G
+    secrets:
+      - ratebeer_db_username
+      - ratebeer_db_password
+      - ratebeer_aws_id
+      - ratebeer_aws_key
+
+
+  write-api:
+    image: brewgorithm/brewgorithm-api:${TAG:-latest}
+    environment:
+      RATEBEER_DB_USERNAME: ratebeer_db_username
+      RATEBEER_DB_PASSWORD: ratebeer_db_password
+      RATEBEER_AWS_ID: ratebeer_aws_id
+      RATEBEER_AWS_KEY: ratebeer_aws_key
+      WRITE_API: 1
+    networks:
+      - api
+    deploy:
+      mode: replicated
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.port=5000
+        - com.df.servicePath=/write-model
+        - com.df.reqPathSearch=/write-model
+        - com.df.serviceDomain=${SERVICE_DOMAIN}
+        - com.df.alertName=memlimit
+        - com.df.alertIf=@service_mem_limit:0.8
+        - com.df.alertFor=30s
+      placement:
+        constraints: 
+          - node.role == worker
+          - node.labels.for == brewgorithm-ai-worker
+      resources:
+        reservations:
+          memory: 6G
+        limits:
+          memory: 6G
+    secrets:
+      - ratebeer_db_username
+      - ratebeer_db_password
+      - ratebeer_aws_id
+      - ratebeer_aws_key
+
+secrets:
+  ratebeer_db_username:
+    external: true
+  ratebeer_db_password:
+    external: true
+  ratebeer_aws_id:
+    external: true
+  ratebeer_aws_key:
+    external: true
