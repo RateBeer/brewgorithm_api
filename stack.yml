@@ -57,6 +57,7 @@ services:
       WRITE_API: 1
     networks:
       - api
+      - proxy
     deploy:
       mode: replicated
       labels:
