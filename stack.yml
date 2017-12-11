@@ -72,11 +72,12 @@ services:
       placement:
         constraints: 
           - node.role == worker
+          - node.labels.for == brewgorithm-ai-worker
       resources:
         reservations:
-          memory: 1G
+          memory: 6G
         limits:
-          memory: 1G
+          memory: 6G
     secrets:
       - ratebeer_db_username
       - ratebeer_db_password
