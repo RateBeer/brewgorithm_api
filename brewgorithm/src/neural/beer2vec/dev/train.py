@@ -25,6 +25,9 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
   # else: trains only the  unseen beers in beer_ids
   # Attempt to load in initial beers
   
+  # remove duplicate beer ids
+  beer_ids = list(set(beer_ids))
+
   try:
     beer_labels = pickle.load(open(config.MODEL_DIR + model_name, "rb"))
 
