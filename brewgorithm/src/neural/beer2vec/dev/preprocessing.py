@@ -1,3 +1,5 @@
+import logging
+import sys
 import numpy as np
 
 from ..access_ext import beer_emb
@@ -7,6 +9,7 @@ from .. import config
 
 pipeline = data_pipelines.ratebeer
 
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 def encode(embeddings):
   if np.linalg.norm(embeddings) == 0:
@@ -18,6 +21,7 @@ def gen_beer_vectors(beer_ids, label_features=["BeerNamePlain", "ABV"]):
   '''
   Generate Ratebeer data with natural language included as an encoded setup
   '''
+  logging.debug('gen_beer_vectors')
   for beer_id in beer_ids:
     beer_vec = np.zeros(beer_emb.EMB_DIM, dtype=np.float64)
     try:

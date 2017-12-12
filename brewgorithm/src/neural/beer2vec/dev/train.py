@@ -1,4 +1,6 @@
 # from multiprocessing import Pool
+import logging
+import sys
 import pickle
 import numpy as np
 import boto
@@ -7,6 +9,8 @@ from boto.s3.key import Key
 from .. import config
 from .preprocessing import gen_beer_vectors
 from ..access_ext import data_pipelines
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 def gen_ids(number):
   beer_ids = []
@@ -26,6 +30,7 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
   # Attempt to load in initial beers
   
   try:
+    logging.info("Running gen_beer2vec")
     beer_labels = pickle.load(open(config.MODEL_DIR + model_name, "rb"))
 
     if should_overwrite:
@@ -35,35 +40,35 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
         if beer['BeerID'] not in input_beer_ids:
           unchanged_beer_labels.append(beer)
         else:
-          print("Overwriting", beer['BeerNamePlain'])
+          logging.debug("Overwriting " + beer['BeerNamePlain'])
       beer_labels = unchanged_beer_labels
 
     else:
       input_beer_ids = set(beer_ids)
       for beer in beer_labels:
         if beer['BeerID'] in input_beer_ids:
-          print("Skipping", beer['BeerNamePlain'])
+          logging.debug("Skipping " + beer['BeerNamePlain'])
           input_beer_ids.remove(beer['BeerID'])
       beer_ids = list(input_beer_ids)
 
-    print(len(beer_labels), "initial beers")
+    logging.debug(len(beer_labels), "initial beers")
   except (OSError, IOError) as e:
     beer_labels = []
-    print("0 initial beers")
+    logging.debug("0 initial beers")
 
   for y in gen_beer_vectors(beer_ids=beer_ids, label_features=config.BEER_FIELDS):
     try:
       # If not valid
       if np.isnan(np.sum(y['vector'])):
-        print("Nan Error")
+        logging.debug("Nan Error")
         continue
 
       # Must be valid
-      print("Saving", y['BeerNamePlain'].encode('ascii', 'ignore').decode('ascii', 'ignore'))
+      logging.debug("Saving " + y['BeerNamePlain'].encode('ascii', 'ignore').decode('ascii', 'ignore'))
       beer_labels.append(y)
 
     except UnicodeEncodeError:
-      print("Unicode Error")
+      logging.debug("Unicode Error")
       continue
 
   pickle.dump(beer_labels, open(config.MODEL_DIR + model_name, 'wb'))
@@ -88,4 +93,4 @@ def save_beer2vec_s3(model_name):
 
 if __name__ == "__main__":
   beer_labels = gen_beer2vec(config.MODEL_NAME, gen_ids(20000))
-  print("Training complete")
+  logging.debug("Training complete")

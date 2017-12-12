@@ -1,8 +1,12 @@
+import logging
+import sys
 import os
 import pymssql
 import pickle
 from ..config import SQL_SERVER, MODEL_DIR, DATABASE
 from ...utils import language
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 filter_nulls = language.cleaning.filter_nulls
 
@@ -14,6 +18,7 @@ def get_sql_credentials():
 def fetch_beer(beer_id, beer_features=[]):
   SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
+  logging.info('connected to db')
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
       select * from Beer
@@ -21,11 +26,13 @@ def fetch_beer(beer_id, beer_features=[]):
   """ % (beer_id, ))
   row = cursor.fetchone()
   if not row:
+    logging.error('No rows found for query')
     raise KeyError
 
   beer_data = {}
   for field in beer_features:
     beer_data[field] = filter_nulls(row[field])
+  logging.debug(beer_data)
   return beer_data
 
 
@@ -66,6 +73,7 @@ def fetch_beer_ids():
   SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
   cursor = conn.cursor(as_dict=True)
+  logging.debug('connected to db to fetch beer ids')
   cursor.execute("""
       select BeerID from Beer order by Beer.RateCount DESC
   """)
@@ -73,6 +81,7 @@ def fetch_beer_ids():
     try:
       row = cursor.fetchone()
     except UnicodeDecodeError:
+      logging.error('UnicodeDecodeError')
       continue
     if not row:
       break
