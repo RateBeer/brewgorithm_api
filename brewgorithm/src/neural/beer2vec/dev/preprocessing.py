@@ -37,7 +37,13 @@ def gen_beer_vectors(beer_ids, label_features=["BeerNamePlain", "ABV"]):
       except AssertionError:
         continue
 
-    assert(i >= config.REVIEWS_FLOOR), beer_id
+    # instead of raising an error, prevent the model
+    # from being updated instead (by setting beer_vec to zeros
+    # which will be caught in train.py)
+    # assert(i >= config.REVIEWS_FLOOR), beer_id
+
+    if i >= config.REVIEWS_FLOOR:
+      beer_vec = np.zeros(beer_emb.EMB_DIM, dtype=np.float64)
 
     beer_vec = beer_vec / np.linalg.norm(beer_vec)
     labels['vector'] = beer_vec
