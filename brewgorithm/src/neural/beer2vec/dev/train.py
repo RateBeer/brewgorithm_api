@@ -55,7 +55,7 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
           input_beer_ids.remove(beer['BeerID'])
       beer_ids = list(input_beer_ids)
 
-    logging.debug("training " + len(beer_labels) + " initial beers")
+    logging.debug("training " + str(len(beer_labels)) + " initial beers")
   except (OSError, IOError) as e:
     beer_labels = []
     logging.debug("0 initial beers")
