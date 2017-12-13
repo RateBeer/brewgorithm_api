@@ -82,7 +82,7 @@ if int(os.environ["WRITE_API"]) == 1:
         response.status_code = 500
         return response
       except Exception as e:
-        response = jsonify({'response': "failure", 'error': "Training crashed"})
+        response = jsonify({'response': "failure", 'error': "Training crashed: {}".format(e)})
         response.status_code = 500
         return response
 
