@@ -20,7 +20,7 @@ pipeline {
           currentBuild.displayName = dateFormat.format(new Date()) + "-" + env.BUILD_NUMBER
           tag = currentBuild.displayName
         }
-        sh "docker image build -t ${registry}/${container} -f Dockerfile ."
+        sh "docker image build -t ${container} -f Dockerfile ."
       }
     }
     stage("release") {
@@ -29,8 +29,8 @@ pipeline {
       }
       steps {
         dockerLogin()
-        dockerTagAndPush(registry, container, 'latest')
-        dockerTagAndPush(registry, container, tag)
+        dockerTagAndPushImage(registry, container, 'latest')
+        dockerTagAndPushImage(registry, container, tag)
         dockerLogout()
       }
     }
