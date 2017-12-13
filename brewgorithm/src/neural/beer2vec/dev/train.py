@@ -62,13 +62,18 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
 
   for y in gen_beer_vectors(beer_ids=beer_ids, label_features=config.BEER_FIELDS):
     try:
+      if y['sufficient_data'] == False:
+        logging.debug("Insufficient data for " + \
+          y['BeerNamePlain'].encode('ascii', 'ignore').decode('ascii', 'ignore'))
+        continue
       # If not valid
       if np.isnan(np.sum(y['vector'])):
         logging.debug("Nan Error")
         continue
 
       # Must be valid
-      logging.debug("Saving " + y['BeerNamePlain'].encode('ascii', 'ignore').decode('ascii', 'ignore'))
+      logging.debug("Saving " + \
+        y['BeerNamePlain'].encode('ascii', 'ignore').decode('ascii', 'ignore'))
       beer_labels.append(y)
 
     except UnicodeEncodeError:

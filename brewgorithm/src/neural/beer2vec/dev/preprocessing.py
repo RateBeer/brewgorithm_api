@@ -46,10 +46,12 @@ def gen_beer_vectors(beer_ids, label_features=["BeerNamePlain", "ABV"]):
     # which will be caught in train.py)
     # assert(i >= config.REVIEWS_FLOOR), beer_id
 
-    if i >= config.REVIEWS_FLOOR:
-      beer_vec = np.zeros(beer_emb.EMB_DIM, dtype=np.float64)
-
-    beer_vec = beer_vec / np.linalg.norm(beer_vec)
-    labels['vector'] = beer_vec
-    yield labels
+    if i < config.REVIEWS_FLOOR:
+      labels['sufficient_data'] = False
+      yield labels
+    else:
+      beer_vec = beer_vec / np.linalg.norm(beer_vec)
+      labels['sufficient_data'] = True
+      labels['vector'] = beer_vec
+      yield labels
 
