@@ -1,6 +1,7 @@
 # from multiprocessing import Pool
 import logging
 import sys
+import os
 import pickle
 import numpy as np
 import boto
