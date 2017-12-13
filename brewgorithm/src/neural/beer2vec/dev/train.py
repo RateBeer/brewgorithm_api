@@ -54,7 +54,7 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
           input_beer_ids.remove(beer['BeerID'])
       beer_ids = list(input_beer_ids)
 
-    logging.debug(len(beer_labels), "initial beers")
+    logging.debug(len(beer_labels) + " initial beers")
   except (OSError, IOError) as e:
     beer_labels = []
     logging.debug("0 initial beers")
@@ -81,16 +81,19 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
 
 def save_beer2vec_s3(model_name):
   '''Uploads the beer2vec model file to s3, overwriting the existing model'''
-
+  logging.debug("Attempting to upload to s3")
   aws_access_key_id = open("/run/secrets/" + os.environ["AWS_ID_SECRET"]).read().strip()
   aws_secret_access_key = open("/run/secrets/" + os.environ["AWS_KEY_SECRET"]).read().strip()
 
   conn = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
+  logging.debug("Connected to s3")
   brewgorithm_bucket = conn.get_bucket(config.S3_BUCKET)
   s3_file = Key(brewgorithm_bucket)
   s3_file.key = config.S3_PATH + model_name
   s3_file.set_contents_from_filename(config.MODEL_DIR + model_name, replace=True)
   s3_file.set_acl('public-read')
+
+  logging.debug("s3 file written")
 
   return True
 
