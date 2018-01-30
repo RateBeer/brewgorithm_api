@@ -22,7 +22,12 @@ def get_descriptors(ratebeer_id):
   beer = beers_map[int(ratebeer_id)]
   descriptors = [x[0] for x in beer_emb.most_similar(positive=[beer['vector']])]
   unique_descriptors = beer_emb.remove_duplicates(descriptors)
-  return jsonify({'descriptors': unique_descriptors})
+  return jsonify({
+    'descriptors': unique_descriptors,
+    'response': {
+      'descriptors': unique_descriptors
+    }
+  })
 
 
 @app.route("/recommend", methods=['POST'])
