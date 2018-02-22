@@ -34,13 +34,13 @@ services:
         - com.df.serviceDomain=${SERVICE_DOMAIN}
         - com.df.scrapePort=8000
         - com.df.alertName.1=resptimeabove
-        - com.df.alertIf.1=sum(rate(flask_request_latency_seconds_bucket{job="brewgorithm_api", le="0.1"}[5m])) / sum(rate(flask_request_latency_seconds_count{job="brewgorithm_api"}[5m])) < 0.9999
+        - com.df.alertIf.1=sum(rate(flask_request_latency_seconds_bucket{job="brewgorithm_api", le="0.25"}[5m])) / sum(rate(flask_request_latency_seconds_count{job="brewgorithm_api"}[5m])) < 0.9999
         - com.df.alertLabels.1=receiver=system,service=brewgorithm_api,scale=up,type=service
-        - com.df.alertAnnotations.1=summary=Response time of service brewgorithm_api is above 0.1
+        - com.df.alertAnnotations.1=summary=Response time of service brewgorithm_api is above 0.25
         - com.df.alertName.2=resptimebelow_unless_resptimeabove
-        - com.df.alertIf.2=sum(rate(flask_request_latency_seconds_bucket{job="brewgorithm_api",le="0.025"}[5m])) / sum(rate(flask_request_latency_seconds_count{job="brewgorithm_api"}[5m])) > 0.75 unless sum(rate(flask_request_latency_seconds_bucket{job="brewgorithm_api",le="0.1"}[5m])) / sum(rate(flask_request_latency_seconds_count{job="brewgorithm_api"}[5m])) < 0.99
+        - com.df.alertIf.2=sum(rate(flask_request_latency_seconds_bucket{job="brewgorithm_api",le="0.1"}[5m])) / sum(rate(flask_request_latency_seconds_count{job="brewgorithm_api"}[5m])) > 0.75 unless sum(rate(flask_request_latency_seconds_bucket{job="brewgorithm_api",le="0.25"}[5m])) / sum(rate(flask_request_latency_seconds_count{job="brewgorithm_api"}[5m])) < 0.99
         - com.df.alertLabels.2=receiver=system,service=brewgorithm_api,scale=down,type=service
-        - com.df.alertAnnotations.2=summary=Response time of service brewgorithm_api is below 0.025 and not above 0.1
+        - com.df.alertAnnotations.2=summary=Response time of service brewgorithm_api is below 0.1 and not above 0.25
         - com.df.scaleUpBy=2
         - com.df.scaleDownBy=1
         - com.df.scaleMin=3
