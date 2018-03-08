@@ -1,11 +1,12 @@
 # Python files
-__pycache__/*
+__pycache__/
 venv/*
 *.pyc
 .cache
 
 # Mac
 .DS_STORE
+.idea/
 
 # Vim files
 *.swp
@@ -13,5 +14,5 @@ venv/*
 *~
 
 # Node
-node_modules/*
+node_modules/
 
