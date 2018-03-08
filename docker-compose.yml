@@ -15,11 +15,12 @@ services:
       WRITE_API: 0
     ports:
       - 5000:5000
+      - 8000:8000
     volumes:
-      - ../../secrets/brewgorithm_api/ratebeer_db_username:/run/secrets/ratebeer_db_username
-      - ../../secrets/brewgorithm_api/ratebeer_db_password:/run/secrets/ratebeer_db_password
-      - ../../secrets/brewgorithm_api/brewgorithm_aws_id:/run/secrets/brewgorithm_aws_id
-      - ../../secrets/brewgorithm_api/brewgorithm_aws_key:/run/secrets/brewgorithm_aws_key
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_username:/run/secrets/ratebeer_db_username
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_password:/run/secrets/ratebeer_db_password
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_id:/run/secrets/brewgorithm_aws_id
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_key:/run/secrets/brewgorithm_aws_key
 
   write_api:
     build: .
@@ -32,7 +33,7 @@ services:
     ports:
       - 5001:5000
     volumes:
-      - ../../secrets/brewgorithm_api/ratebeer_db_username:/run/secrets/ratebeer_db_username
-      - ../../secrets/brewgorithm_api/ratebeer_db_password:/run/secrets/ratebeer_db_password
-      - ../../secrets/brewgorithm_api/brewgorithm_aws_id:/run/secrets/brewgorithm_aws_id
-      - ../../secrets/brewgorithm_api/brewgorithm_aws_key:/run/secrets/brewgorithm_aws_key
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_username:/run/secrets/ratebeer_db_username
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_password:/run/secrets/ratebeer_db_password
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_id:/run/secrets/brewgorithm_aws_id
+      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_key:/run/secrets/brewgorithm_aws_key

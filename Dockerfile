@@ -1,5 +1,8 @@
 From tensorflow/tensorflow:latest-py3
 
+EXPOSE 8000
+EXPOSE 5000
+
 # Install apk packages
 RUN apt update \
   && apt install gcc make libc-dev g++ bzip2 git libssl-dev openssl build-essential -y
@@ -35,3 +38,8 @@ RUN python3 -m brewgorithm.src.neural.beer_emb.download
 # Run tests
 RUN py.test brewgorithm/tests
 CMD python3 -m brewgorithm.src.core.flask_api.run
+
+HEALTHCHECK --interval=5s \
+            --timeout=5s \
+            --retries=6 \
+            CMD curl -fs http://localhost:5000/_health || exit 1
