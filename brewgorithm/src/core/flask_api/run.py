@@ -1,4 +1,5 @@
 import os
+import logging
 from flask import request, jsonify
 from flask_api import FlaskAPI
 from flask_prometheus import monitor
@@ -55,6 +56,7 @@ def get_recommendations():
   try:
     assert('ids' in content)
     assert(len(content['ids']) > 0)
+    logging.info("/recommend - IDs: " + " ".join(content['ids']));
     return jsonify({'response': recommender.similar_beers([
         int(x) for x in content['ids']], beers_map, beer_emb.EMB_DIM)})
   except (KeyError, AssertionError):
@@ -122,6 +124,7 @@ def get_subset_recommendations():
     assert('ids' in content)
     assert('subset' in content)
     assert(len(content['ids']) > 0)
+    logging.info("/recommend_subset - IDs: " + " ".join(content['ids'])  + " Subset: " + " ".join(content['subset']));
     return jsonify({'response': recommender.similar_beers([
         int(x) for x in content['ids']], beers_map, beer_emb.EMB_DIM, subset=[int(x) for x in content['subset']])})
   except (KeyError, AssertionError):
