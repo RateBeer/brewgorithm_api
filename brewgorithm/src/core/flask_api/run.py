@@ -4,7 +4,7 @@ from flask import request, jsonify
 from flask_api import FlaskAPI
 from flask_prometheus import monitor
 from flask_cors import CORS
-from ...neural import beer2vec, beer_emb, recommender
+from brewgorith.src.neural import beer2vec, beer_emb, recommender
 
 
 app = FlaskAPI(__name__)
