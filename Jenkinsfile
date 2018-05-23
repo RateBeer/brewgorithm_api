@@ -84,7 +84,7 @@ def prepareAndRunCI() {
     stage("Build") {
       // The base image is stored in ECR us-west-2; login prior so we may pull it.
       loginToAWSRegistry(ECR_REGION)
-      sh "docker build -t ${IMAGE_NAME_TEMP}"
+      sh "docker build -t ${IMAGE_NAME_TEMP} ."
     }
 
     // Continuous deployment will only be setup for `dev` and `master` branches.
