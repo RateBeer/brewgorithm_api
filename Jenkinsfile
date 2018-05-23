@@ -45,7 +45,8 @@ def prepareAndRunCI() {
   String ECS_CLUSTER         // The name of the ECS Cluster
   String ECS_SERVICE_NAME    // The ECS Service Name
 
-  ECS_SERVICE_NAME = "brewgorithm-api"
+  ECS_SERVICE_NAME_READ  = "brewgorithm-api-read"
+  ECS_SERVICE_NAME_WRITE = "brewgorithm-api-write"
   IMAGE_NAME       = "brewgorithm-api"
   IMAGE_NAME_TEMP  = "${IMAGE_NAME}-${env.BRANCH_NAME.toLowerCase()}-${env.BUILD_NUMBER}"
   CI_TAG           = "ci-latest"
@@ -95,10 +96,19 @@ def prepareAndRunCI() {
         pushToDockerRegistry(IMAGE_NAME, ECR_REPOSITORY, CI_TAG, VERSION_TAG, LATEST_TAG)
       }
 
-      stage("Deploy to ${ENVIRONMENT_NAME}") {
+      stage("Deploy read API to ${ENVIRONMENT_NAME}") {
         // Deploy to ECS; rollback on failure.
         try {
-          deployECSImageTag(ECS_REGION, ECS_CLUSTER, ECS_SERVICE_NAME, VERSION_TAG, true)
+          deployECSImageTag(ECS_REGION, ECS_CLUSTER, ECS_SERVICE_NAME_READ, VERSION_TAG, true)
+        } catch(e) {
+          error 'Deployment failed; previous version has been restored.'
+        }
+      }
+
+      stage("Deploy write API to ${ENVIRONMENT_NAME}") {
+        // Deploy to ECS; rollback on failure.
+        try {
+          deployECSImageTag(ECS_REGION, ECS_CLUSTER, ECS_SERVICE_NAME_WRITE, VERSION_TAG, true)
         } catch(e) {
           error 'Deployment failed; previous version has been restored.'
         }
