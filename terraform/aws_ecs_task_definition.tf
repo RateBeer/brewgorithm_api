@@ -8,7 +8,7 @@ data "template_file" "brewgorithm_read_ecs_task_definition" {
     memory_reservation   = "${var.container_memory_reservation}"
     container_port       = 5000
     env_vars             = "[{\"name\": \"WRITE_API\", \"value\": \"0\"} ]"
-    log_group            = "Brewgorithm_API_Read_${var.name}" # Feature request to be able to reference the Terraform resource directly.
+    log_group            = "${aws_cloudwatch_log_group.brewgorithm_read.name}"
     log_region           = "${data.aws_region.current.name}"
     image_uri            = "${var.image_uri}"
   }
@@ -33,7 +33,7 @@ data "template_file" "brewgorithm_write_ecs_task_definition" {
     memory_reservation   = "${var.container_memory_reservation}"
     container_port       = 5000
     env_vars             = "[{\"name\": \"WRITE_API\", \"value\": \"1\"} ]"
-    log_group            = "Brewgorithm_API_Write_${var.name}" # Feature request to be able to reference the Terraform resource directly.
+    log_group            = "${aws_cloudwatch_log_group.brewgorithm_write.name}"
     log_region           = "${data.aws_region.current.name}"
     image_uri            = "${var.image_uri}"
   }

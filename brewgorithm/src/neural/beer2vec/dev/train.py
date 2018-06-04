@@ -4,7 +4,7 @@ import sys
 import os
 import pickle
 import numpy as np
-import boto
+import boto3
 from boto.s3.key import Key
 
 from .. import config
@@ -89,12 +89,17 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
 def save_beer2vec_s3(model_name):
   '''Uploads the beer2vec model file to s3, overwriting the existing model'''
   logging.debug("Attempting to upload to s3")
-  aws_access_key_id = open("/run/secrets/" + os.environ["AWS_ID_SECRET"]).read().strip()
-  aws_secret_access_key = open("/run/secrets/" + os.environ["AWS_KEY_SECRET"]).read().strip()
 
-  conn = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
+  # Define the endpoint if we have it set.
+  endpoint = os.environ["S3_ENDPOINT"] or None
+
+  s3 = boto3.client('s3',
+      region_name=os.environ["S3_AWS_REGION"],
+      endpoint_url=endpoint
+  )
+
   logging.debug("Connected to s3")
-  brewgorithm_bucket = conn.get_bucket(config.S3_BUCKET)
+  brewgorithm_bucket = s3.get_bucket(config.S3_BUCKET)
   s3_file = Key(brewgorithm_bucket)
   s3_file.key = config.S3_PATH + model_name
   s3_file.set_contents_from_filename(config.MODEL_DIR + model_name, replace=True)

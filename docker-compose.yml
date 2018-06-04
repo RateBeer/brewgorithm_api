@@ -5,35 +5,36 @@ networks:
 
 services:
 
+  localstack:
+    image: localstack/localstack:0.8.0
+    ports:
+      - "4576:4576"
+      - "4569:4569"
+      - "4583:4583"
+      - "4572:4572"
+      - "8080:8080" # Web UI
+    environment:
+      - SERVICES=ssm:4583,s3:4572
+      - DEBUG=${DEBUG- }
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/tmp/localstack:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+
   api:
     build: .
-    environment:
-      RATEBEER_DB_USERNAME: ratebeer_db_username
-      RATEBEER_DB_PASSWORD: ratebeer_db_password
-      AWS_ID_SECRET: brewgorithm_aws_id
-      AWS_KEY_SECRET: brewgorithm_aws_key
-      WRITE_API: 0
+    env_file: .env
     ports:
       - 5000:5000
       - 8000:8000
-    volumes:
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_username:/run/secrets/ratebeer_db_username
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_password:/run/secrets/ratebeer_db_password
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_id:/run/secrets/brewgorithm_aws_id
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_key:/run/secrets/brewgorithm_aws_key
 
   write_api:
     build: .
-    environment:
-      RATEBEER_DB_USERNAME: ratebeer_db_username
-      RATEBEER_DB_PASSWORD: ratebeer_db_password
-      AWS_ID_SECRET: brewgorithm_aws_id
-      AWS_KEY_SECRET: brewgorithm_aws_key
-      WRITE_API: 1
+    env_file: .env
     ports:
       - 5001:5000
-    volumes:
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_username:/run/secrets/ratebeer_db_username
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/ratebeer_db_password:/run/secrets/ratebeer_db_password
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_id:/run/secrets/brewgorithm_aws_id
-      - ../../brewgorithm/secrets/brewgorithm-api-secrets/brewgorithm_aws_key:/run/secrets/brewgorithm_aws_key

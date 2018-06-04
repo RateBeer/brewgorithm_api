@@ -19,3 +19,4 @@ pycharm-debug-py3k.egg
 # Node
 node_modules/
 
+.env

@@ -1,0 +1,5 @@
+.env
+.env.template
+Dockerfile
+docker-compose.yml
+Jenkinsfile

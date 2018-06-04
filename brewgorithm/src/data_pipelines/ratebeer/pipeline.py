@@ -3,21 +3,40 @@ import sys
 import os
 import pymssql
 import pickle
-from ..config import SQL_SERVER, MODEL_DIR, DATABASE
+import boto3
+from ..config import SQL_SERVER, MODEL_DIR, DATABASE, SQL_PORT
 from ...utils import language
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 filter_nulls = language.cleaning.filter_nulls
 
+def getSSMValue(param_name):
+    # Define the endpoint if we have it set.
+    endpoint = os.environ["SSM_ENDPOINT"] or None
+
+    ssm = boto3.client('ssm',
+        region_name=os.environ["SSM_AWS_REGION"],
+        endpoint_url=endpoint
+    )
+
+    response = ssm.get_parameters(
+        Names=[
+            param_name,
+        ],
+        WithDecryption=True
+    )
+
+    return response['Parameters'][0]['Value']
+
 def get_sql_credentials():
-  sql_usr = open("/run/secrets/" + os.environ["RATEBEER_DB_USERNAME"]).read().strip()
-  sql_pass = open("/run/secrets/" + os.environ["RATEBEER_DB_PASSWORD"]).read().strip()
+  sql_usr = getSSMValue(os.environ["SSM_KEY_RATEBEER_DB_USER"])
+  sql_pass = getSSMValue(os.environ["SSM_KEY_RATEBEER_DB_PASS"])
   return sql_usr, sql_pass
 
 def fetch_beer(beer_id, beer_features=[]):
   SQL_USR, SQL_PASS = get_sql_credentials()
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
+  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252", port=SQL_PORT)
   logging.info('connected to db')
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
@@ -33,12 +52,13 @@ def fetch_beer(beer_id, beer_features=[]):
   for field in beer_features:
     beer_data[field] = filter_nulls(row[field])
   logging.debug(beer_data)
+
   return beer_data
 
 
 def fetch_beer_reviews(beer_id, review_features=[]):
   SQL_USR, SQL_PASS = get_sql_credentials()
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
+  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252", port=SQL_PORT)
   cursor = conn.cursor(as_dict=True)
   cursor.execute("""
       select *
@@ -71,7 +91,7 @@ def fetch_beer_reviews(beer_id, review_features=[]):
 
 def fetch_beer_ids():
   SQL_USR, SQL_PASS = get_sql_credentials()
-  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252")
+  conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252", port=SQL_PORT)
   cursor = conn.cursor(as_dict=True)
   logging.debug('connected to db to fetch beer ids')
   cursor.execute("""
