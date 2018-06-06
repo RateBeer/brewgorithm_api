@@ -61,7 +61,7 @@ def prepareAndRunCI() {
       ENVIRONMENT_NAME = "qa"
       REACT_APP_ENV    = "qa"
       ECS_REGION       = "${env.QA_AWS_REGION}"
-      ECS_CLUSTER      = "${env.QA_ECS_CLUSTER}"
+      ECS_CLUSTER      = "Brewgorithm-ECS-QA"
       break;
     case "master":
       VERSION_TAG      = "m1.${env.BUILD_NUMBER}"
@@ -69,7 +69,7 @@ def prepareAndRunCI() {
       ENVIRONMENT_NAME = "prod"
       REACT_APP_ENV    = "production"
       ECS_REGION       = "${env.PROD_AWS_REGION}"
-      ECS_CLUSTER      = "${env.PROD_ECS_CLUSTER}"
+      ECS_CLUSTER      = "Brewgorithm-ECS-Prod"
       break;
     default:
       break;
