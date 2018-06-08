@@ -4,18 +4,6 @@ variable "name" {
   description = "This will be added to the name of most resources to keep them unique."
 }
 
-variable "subnets" {
-  type = "list"
-
-  description = "List of subnets."
-}
-
-variable "vpc_default_security_group_id" {
-  type = "string"
-
-  description = "Default security group of VPC."
-}
-
 variable "vpc_id" {
   type = "string"
 
@@ -46,8 +34,14 @@ variable "deployment_minimum_healthy_percent" {
   default = 100 # The AWS Default
 }
 
+variable "ssm_aws_region" {}
+variable "s3_aws_region" {}
+
 variable "ssm_key_ratebeer_db_user" {}
 variable "ssm_key_ratebeer_db_pass" {}
+
+variable "api_write_host" {}
+variable "api_read_host" {}
 
 variable "image_uri" {}
 variable "number_of_read_services" {}
@@ -55,7 +49,6 @@ variable "number_of_write_services" {}
 variable "ecs_cluster_id" {}
 variable "alb_listener_arn" {}
 variable "target_group_priority" {}
-variable "target_group_host_pattern" {}
 variable "container_cpu" {}
 variable "container_memory" {}
 variable "container_memory_reservation" {}

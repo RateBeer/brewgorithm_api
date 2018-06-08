@@ -9,12 +9,7 @@ resource "aws_alb_listener_rule" "brewgorithm_read" {
 
   condition {
     field  = "host-header"
-    values = ["${var.target_group_host_pattern}"]
-  }
-
-  condition {
-    field  = "path-pattern"
-    values = ["/model"]
+    values = ["${var.api_read_host}"]
   }
 }
 
@@ -29,11 +24,28 @@ resource "aws_alb_listener_rule" "brewgorithm_write" {
 
   condition {
     field  = "host-header"
-    values = ["${var.target_group_host_pattern}"]
+    values = ["${var.api_write_host}"]
+  }
+
+}
+
+
+######## TEMPORARY #########
+# While we switch from old-Brewgorithm infra; we just want to have an `api.brewgorithm` endpoint to be supported.
+
+resource "aws_alb_listener_rule" "temporary_brewgorithm_read" {
+  listener_arn = "${var.alb_listener_arn}"
+  priority     = "${var.target_group_priority + 2}"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.brewgorithm_read.arn}"
   }
 
   condition {
-    field  = "path-pattern"
-    values = ["/write-model"]
+    field  = "host-header"
+    values = ["api.ratebeer.com"]
   }
 }
+
+######## TEMPORARY #########

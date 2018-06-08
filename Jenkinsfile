@@ -89,7 +89,7 @@ def prepareAndRunCI() {
     }
 
     // Continuous deployment will only be setup for `dev` and `master` branches.
-    if ( (env.BRANCH_NAME == "migration") || (env.BRANCH_NAME == "master") ) {
+    if ( (env.BRANCH_NAME == "dev") || (env.BRANCH_NAME == "master") ) {
 
       stage("Push To Registry") {
         sh "docker tag ${IMAGE_NAME_TEMP} ${IMAGE_NAME}:${CI_TAG}"
