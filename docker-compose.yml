@@ -11,10 +11,9 @@ services:
       - "4576:4576"
       - "4569:4569"
       - "4583:4583"
-      - "4572:4572"
       - "8080:8080" # Web UI
     environment:
-      - SERVICES=ssm:4583,s3:4572
+      - SERVICES=ssm:4583
       - DEBUG=${DEBUG- }
       - DATA_DIR=${DATA_DIR- }
       - PORT_WEB_UI=${PORT_WEB_UI- }
@@ -32,9 +31,3 @@ services:
     ports:
       - 5000:5000
       - 8000:8000
-
-  write_api:
-    build: .
-    env_file: .env
-    ports:
-      - 5001:5000

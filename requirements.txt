@@ -19,5 +19,5 @@ flask_prometheus
 # Util
 editdistance
 
-# AWS S3 access
+# AWS
 boto3

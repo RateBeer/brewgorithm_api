@@ -35,17 +35,13 @@ variable "deployment_minimum_healthy_percent" {
 }
 
 variable "ssm_aws_region" {}
-variable "s3_aws_region" {}
-
 variable "ssm_key_ratebeer_db_user" {}
 variable "ssm_key_ratebeer_db_pass" {}
 
-variable "api_write_host" {}
-variable "api_read_host" {}
+variable "api_host" {}
 
 variable "image_uri" {}
-variable "number_of_read_services" {}
-variable "number_of_write_services" {}
+variable "number_of_tasks" {}
 variable "ecs_cluster_id" {}
 variable "alb_listener_arn" {}
 variable "target_group_priority" {}

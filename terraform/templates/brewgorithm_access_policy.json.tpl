@@ -25,8 +25,7 @@
                 "logs:PutLogEvents"
             ],
             "Resource": [
-                "${brewgorithm_read_log_group_arn}",
-                "${brewgorithm_write_log_group_arn}"
+                "${brewgorithm_log_group_arn}"
             ]
         },
         {
@@ -42,8 +41,8 @@
                 "ssm:GetParameters"
             ],
             "Resource": [
-              "arn:aws:ssm:${aws_region}:${aws_account_id}:parameter${ssm_key_ratebeer_db_user}",
-              "arn:aws:ssm:${aws_region}:${aws_account_id}:parameter${ssm_key_ratebeer_db_pass}"
+              "arn:aws:ssm:${ssm_aws_region}:${aws_account_id}:parameter${ssm_key_ratebeer_db_user}",
+              "arn:aws:ssm:${ssm_aws_region}:${aws_account_id}:parameter${ssm_key_ratebeer_db_pass}"
             ]
         },
         {
@@ -52,7 +51,7 @@
               "kms:Decrypt"
            ],
            "Resource":[
-              "arn:aws:kms:${aws_region}:${aws_account_id}:alias/aws/ssm"
+              "arn:aws:kms:${ssm_aws_region}:${aws_account_id}:alias/aws/ssm"
            ]
         }
     ]

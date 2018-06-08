@@ -28,13 +28,6 @@ COPY ./brewgorithm ./brewgorithm
 
 ENV WRITE_API 1
 
-RUN mkdir -p /service/brewgorithm/src/neural/beer2vec/models/
-RUN mkdir -p /service/brewgorithm/src/neural/beer_emb/models/
-
-# Download beer models
-RUN python3 -m brewgorithm.src.neural.beer2vec.download
-RUN python3 -m brewgorithm.src.neural.beer_emb.download
-
 # Run tests
 RUN py.test brewgorithm/tests
 CMD python3 -m brewgorithm.src.core.flask_api.run

@@ -81,35 +81,10 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
       continue
 
   pickle.dump(beer_labels, open(config.MODEL_DIR + model_name, 'wb'))
-  save_beer2vec_s3(model_name)
-  
+
+  logging.debug("THIS FILE WAS CREATED BUT NOT SAVED ANYWHERE; FUNCTIONALITY WAS REMOVED")
+
   return beer_labels
-
-def save_beer2vec_s3(model_name):
-  '''Uploads the beer2vec model file to s3, overwriting the existing model'''
-  logging.debug("Attempting to upload to s3")
-
-  # Define the endpoint if we have it set.
-  endpoint = os.environ["S3_ENDPOINT"] or None
-
-  s3 = boto3.client('s3',
-      region_name=os.environ["S3_AWS_REGION"],
-      endpoint_url=endpoint
-  )
-
-  logging.debug("Connected to s3")
-
-  response = s3.put_object(
-    Bucket=config.S3_BUCKET,
-    Body=open(config.MODEL_DIR + model_name, 'rb'),
-    SSECustomerAlgorithm="AES256",
-    Key=config.S3_PATH + model_name
-  )
-
-  logging.debug(response)
-  logging.debug("s3 file written")
-
-  return True
 
 if __name__ == "__main__":
   beer_labels = gen_beer2vec(config.MODEL_NAME, gen_ids(20000))
