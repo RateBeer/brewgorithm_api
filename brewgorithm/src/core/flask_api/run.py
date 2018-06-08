@@ -31,6 +31,7 @@ def healthcheck():
   })
 
 @app.route("/descriptors/<ratebeer_id>", methods=['GET'])
+@app.route("/model/descriptors/<ratebeer_id>", methods=['GET'])
 def get_descriptors(ratebeer_id):
   """For a text query, pipe it through the gate and return the best answer."""
   if int(ratebeer_id) not in beers_map:
@@ -50,6 +51,7 @@ def get_descriptors(ratebeer_id):
 
 
 @app.route("/recommend", methods=['POST'])
+@app.route("/model/recommend", methods=['POST'])
 def get_recommendations():
   """For a text query, pipe it through the gate and return the best answer."""
   content = request.json
@@ -65,6 +67,7 @@ def get_recommendations():
     return response
 
 @app.route("/refresh_model", methods=['GET'])
+@app.route("/model/refresh_model", methods=['GET'])
 def refresh_model():
   """Pull the latest model from s3, and update the model in memory"""
   beer2vec.refresh_beer2vec_model()
@@ -85,6 +88,7 @@ def refresh_model():
 
 if int(os.environ["WRITE_API"]) == 1:
   @app.route("/update_vectors", methods=['POST'])
+  @app.route("/write-model/update_vectors", methods=['POST'])
   def update_vectors():
     """For a json array, train the selected beer ids and return success / fail."""
     content = request.json

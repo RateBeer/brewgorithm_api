@@ -55,7 +55,7 @@ def prepareAndRunCI() {
 
   switch (env.BRANCH_NAME) {
     // Set our variables as appropriate for the branch we're on.
-    case "migration":
+    case "dev":
       VERSION_TAG      = "d1.${env.BUILD_NUMBER}"
       LATEST_TAG       = "dlatest"
       ENVIRONMENT_NAME = "qa"
