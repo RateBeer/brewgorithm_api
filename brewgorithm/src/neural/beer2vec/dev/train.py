@@ -5,7 +5,6 @@ import os
 import pickle
 import numpy as np
 import boto3
-from boto.s3.key import Key
 
 from .. import config
 from .preprocessing import gen_beer_vectors
@@ -99,12 +98,15 @@ def save_beer2vec_s3(model_name):
   )
 
   logging.debug("Connected to s3")
-  brewgorithm_bucket = s3.get_bucket(config.S3_BUCKET)
-  s3_file = Key(brewgorithm_bucket)
-  s3_file.key = config.S3_PATH + model_name
-  s3_file.set_contents_from_filename(config.MODEL_DIR + model_name, replace=True)
-  s3_file.set_acl('public-read')
 
+  response = s3.put_object(
+    Bucket=config.S3_BUCKET,
+    Body=open(config.MODEL_DIR + model_name, 'rb'),
+    SSECustomerAlgorithm="AES256",
+    Key=config.S3_PATH + model_name
+  )
+
+  logging.debug(response)
   logging.debug("s3 file written")
 
   return True
