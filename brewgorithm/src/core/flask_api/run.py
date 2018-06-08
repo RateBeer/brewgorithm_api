@@ -121,6 +121,7 @@ if int(os.environ["WRITE_API"]) == 1:
       return response
 
 @app.route("/recommend_subset", methods=['POST'])
+@app.route("/model/recommend_subset", methods=['POST'])
 def get_subset_recommendations():
   """For a text query, pipe it through the gate and return the best answer."""
   content = request.json
