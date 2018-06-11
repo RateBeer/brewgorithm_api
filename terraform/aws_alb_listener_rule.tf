@@ -27,7 +27,7 @@ resource "aws_alb_listener_rule" "temporary_brewgorithm" {
 
   condition {
     field  = "host-header"
-    values = ["api.ratebeer.com"]
+    values = ["api.brewgorithm.com"]
   }
 }
 
