@@ -13,7 +13,20 @@ properties([
 
 node("ubuntu-docker") {
   linuxCleanup()
-checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitLFSPull']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'ratebeer-jenkins-global', url: env.GIT_URL]]])
+  checkout(
+    [
+      $class: 'GitSCM',
+      branches: [[name: '**']],
+      doGenerateSubmoduleConfigurations: false,
+      extensions: [[$class: 'GitLFSPull']],
+      submoduleCfg: [],
+      userRemoteConfigs: [
+          [
+            credentialsId: 'ratebeer-jenkins-global',
+            url: 'https://github.com/RateBeer/brewgorithm_api'
+          ]
+      ]
+  )
 
 
   try {
