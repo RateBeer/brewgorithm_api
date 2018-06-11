@@ -27,15 +27,6 @@
             "Resource": [
                 "${brewgorithm_log_group_arn}"
             ]
-        },
-        {
-           "Effect":"Allow",
-           "Action":[
-              "kms:Decrypt"
-           ],
-           "Resource":[
-              "arn:aws:kms:${ssm_aws_region}:${aws_account_id}:alias/aws/ssm"
-           ]
         }
     ]
 }
