@@ -13,8 +13,8 @@ properties([
 
 node("ubuntu-docker") {
   linuxCleanup()
-  checkout scm
-  sh "git lfs pull"
+checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitLFSPull']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'ratebeer-jenkins-global', url: 'https://github.com/RateBeer/brewgorithm_api']]])
+
 
   try {
     notifyBuild('STARTED')
