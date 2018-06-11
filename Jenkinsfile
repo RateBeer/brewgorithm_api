@@ -14,7 +14,7 @@ properties([
 node("ubuntu-docker") {
   linuxCleanup()
   checkout scm
-  sh "git lfs init && git lfs pull"
+  sh "git lfs pull"
 
   try {
     notifyBuild('STARTED')
