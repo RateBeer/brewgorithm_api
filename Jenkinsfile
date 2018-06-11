@@ -13,7 +13,7 @@ properties([
 
 node("ubuntu-docker") {
   linuxCleanup()
-checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitLFSPull']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'ratebeer-jenkins-global', url: ${env.GIT_URL}]]])
+checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'GitLFSPull']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'ratebeer-jenkins-global', url: build.environment.get("GIT_URL")]]])
 
 
   try {
