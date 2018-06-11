@@ -29,23 +29,6 @@
             ]
         },
         {
-            "Effect": "Allow",
-            "Action": [
-                "ssm:DescribeParameters"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ssm:GetParameters"
-            ],
-            "Resource": [
-              "arn:aws:ssm:${ssm_aws_region}:${aws_account_id}:parameter${ssm_key_ratebeer_db_user}",
-              "arn:aws:ssm:${ssm_aws_region}:${aws_account_id}:parameter${ssm_key_ratebeer_db_pass}"
-            ]
-        },
-        {
            "Effect":"Allow",
            "Action":[
               "kms:Decrypt"

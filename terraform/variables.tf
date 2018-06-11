@@ -34,10 +34,6 @@ variable "deployment_minimum_healthy_percent" {
   default = 100 # The AWS Default
 }
 
-variable "ssm_aws_region" {}
-variable "ssm_key_ratebeer_db_user" {}
-variable "ssm_key_ratebeer_db_pass" {}
-
 variable "api_host" {}
 
 variable "image_uri" {}

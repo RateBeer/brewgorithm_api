@@ -7,7 +7,7 @@ data "template_file" "brewgorithm_ecs_task_definition" {
     memory               = "${var.container_memory}"
     memory_reservation   = "${var.container_memory_reservation}"
     container_port       = 5000
-    env_vars             = "[{\"name\": \"WRITE_API\", \"value\": \"0\"}, {\"name\": \"RATEBEER_DB_HOST\", \"value\": \"db.r8.beer\"}, {\"name\": \"RATEBEER_DB_DATABASE\", \"value\": \"Ratebeer2\"}, {\"name\": \"RATEBEER_DB_PORT\", \"value\": \"1433\"}, {\"name\": \"S3_PATH\", \"value\": \"17-11-20/\"}, {\"name\": \"SSM_AWS_REGION\", \"value\": \"${var.ssm_aws_region}\"} ]"
+    env_vars             = "[{\"name\": \"WRITE_API\", \"value\": \"0\"}]"
     log_group            = "${aws_cloudwatch_log_group.brewgorithm.name}"
     log_region           = "${data.aws_region.current.name}"
     image_uri            = "${var.image_uri}"
