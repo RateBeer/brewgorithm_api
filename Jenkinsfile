@@ -69,7 +69,7 @@ def prepareAndRunCI() {
       ENVIRONMENT_NAME = "prod"
       REACT_APP_ENV    = "production"
       ECS_REGION       = "${env.PROD_AWS_REGION}"
-      ECS_CLUSTER      = "${env.QA_ECS_CLUSTER}"
+      ECS_CLUSTER      = "${env.PROD_ECS_CLUSTER}"
       break;
     default:
       break;
