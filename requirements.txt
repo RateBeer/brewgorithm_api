@@ -8,7 +8,7 @@ spacy==2.0.5
 tensorflow
 
 # Database
-pymssql==1.0.3
+pymssql
 
 # Flask
 flask
