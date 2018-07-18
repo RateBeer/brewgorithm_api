@@ -58,7 +58,7 @@ def remove_duplicates(words):
       for word_to_remove in words_to_remove:
         unique_words.remove(word_to_remove)
 
-  return [word for word in unique_words if word not in trademarks]
+  return sorted([word for word in unique_words if word not in trademarks], key=lambda x: words.index(x))
 
 
 def most_similar(positive=None, negative=None):
