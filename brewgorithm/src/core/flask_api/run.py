@@ -1,4 +1,3 @@
-import os
 import logging
 from flask import request, jsonify
 from flask_api import FlaskAPI
@@ -65,44 +64,6 @@ def get_recommendations():
     response = jsonify({'response': None})
     response.status_code = 500
     return response
-
-#
-# Disabling this endpoint for now until we figure out how we want to handle retraining. In the meantime,
-# we don't want an unauthenticated endpointn exposed that could DOS our database.
-#
-# if int(os.environ["WRITE_API"]) == 1:
-#   @app.route("/update_vectors", methods=['POST'])
-#   @app.route("/write-model/update_vectors", methods=['POST'])
-#   def update_vectors():
-#     """For a json array, train the selected beer ids and return success / fail."""
-#     content = request.json
-#     try:
-#       assert('ids' in content)
-#       assert(len(content['ids']) > 0)
-
-#       try:
-#         beer2vec.dev.train.gen_beer2vec(beer2vec.config.MODEL_NAME,
-#             [int(x) for x in content['ids']], should_overwrite=True)
-#         return jsonify({'response': "success"})
-#       except KeyError as e:
-#         response = jsonify({'response': "failure", 'error': 
-#             "Beer id not found in database: {}".format(e)})
-#         response.status_code = 500
-#         return response
-#       except AssertionError as e:
-#         response = jsonify({'response': "failure", 'error': 
-#             "Not enough reviews to train for beer: {}".format(e)})
-#         response.status_code = 500
-#         return response
-#       except Exception as e:
-#         response = jsonify({'response': "failure", 'error': "Training crashed: {}".format(e)})
-#         response.status_code = 500
-#         return response
-
-#     except (KeyError, AssertionError):
-#       response = jsonify({'response': None})
-#       response.status_code = 500
-#       return response
 
 @app.route("/recommend_subset", methods=['POST'])
 @app.route("/model/recommend_subset", methods=['POST'])
