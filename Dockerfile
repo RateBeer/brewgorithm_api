@@ -26,8 +26,6 @@ RUN pip3 install pytest
 
 COPY ./brewgorithm ./brewgorithm
 
-ENV WRITE_API 1
-
 # Run tests
 RUN py.test brewgorithm/tests
 CMD python3 -m brewgorithm.src.core.flask_api.run
