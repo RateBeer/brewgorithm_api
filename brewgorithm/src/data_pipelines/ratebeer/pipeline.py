@@ -2,9 +2,8 @@ import logging
 import sys
 import os
 import pymssql
-import pickle
 import boto3
-from ..config import SQL_SERVER, MODEL_DIR, DATABASE, SQL_PORT
+from ..config import SQL_SERVER, DATABASE, SQL_PORT
 from ...utils import language
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -42,7 +41,7 @@ def fetch_beer(beer_id, beer_features=[]):
   cursor.execute("""
       select * from Beer
       where BeerId = %s
-  """ % (beer_id, ))
+  """ % (beer_id,))
   row = cursor.fetchone()
   if not row:
     logging.error('No rows found for query')
@@ -89,17 +88,19 @@ def fetch_beer_reviews(beer_id, review_features=[]):
     yield review_data, row['Comments'].encode('ascii', 'ignore').decode('ascii', 'ignore')
 
 
-def fetch_beer_ids():
+def fetch_beer_ids(rating_floor, reviews_floor):
   SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252", port=SQL_PORT)
   cursor = conn.cursor(as_dict=True)
   logging.debug('connected to db to fetch beer ids')
   cursor.execute("""
-      select BeerID from Beer order by Beer.RateCount DESC
-  """)
+      select BeerID from Beer where AverageRating >= %s AND BeerID IN 
+      (select BeerID from BeerRating group by BeerID having count(*) >= %s)
+  """ % (str (rating_floor), str (reviews_floor),))
   while True:
     try:
       row = cursor.fetchone()
+      logging.info("Fetched Beer ID: " + str (row['BeerID']))
     except UnicodeDecodeError:
       logging.error('UnicodeDecodeError')
       continue
