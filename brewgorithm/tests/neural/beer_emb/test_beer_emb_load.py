@@ -1,4 +1,4 @@
-from ....src.neural import beer_emb, word_weighter
+from brewgorithm.src.neural import beer_emb, word_weighter
 import numpy as np
 import unittest
 from sklearn.metrics.pairwise import cosine_similarity
