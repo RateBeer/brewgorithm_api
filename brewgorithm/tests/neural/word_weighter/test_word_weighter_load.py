@@ -1,5 +1,5 @@
 import unittest
-from ....src.neural import beer_emb, word_weighter
+from brewgorithm.src.neural import beer_emb, word_weighter
 
 is_beer_related = word_weighter.is_beer_related
 

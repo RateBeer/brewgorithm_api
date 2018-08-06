@@ -1,5 +1,5 @@
 import unittest
-from ....src.neural import beer_emb, word_weighter
+from brewgorithm.src.neural import beer_emb, word_weighter
 
 
 class TestWordWeighterDev(unittest.TestCase):

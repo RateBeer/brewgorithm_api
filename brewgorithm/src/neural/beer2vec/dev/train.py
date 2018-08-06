@@ -6,16 +6,16 @@ import pickle
 import numpy as np
 import boto3
 
-from .. import config
-from .preprocessing import gen_beer_vectors
-from ..access_ext import data_pipelines
+from brewgorithm.src.neural.beer2vec import config
+from brewgorithm.src.neural.beer2vec.dev.preprocessing import gen_beer_vectors
+from brewgorithm.src.neural.beer2vec.access_ext import data_pipelines
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 def gen_ids(number):
   beer_ids = []
   i = 0
-  for beer_id in data_pipelines.ratebeer.fetch_beer_ids():
+  for beer_id in data_pipelines.ratebeer.fetch_beer_ids(config.REVIEWS_FLOOR):
     beer_ids.append(beer_id)
     i += 1
     if i > number:
@@ -86,6 +86,6 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
 
   return beer_labels
 
-if __name__ == "__main__":
-  beer_labels = gen_beer2vec(config.MODEL_NAME, gen_ids(20000))
+if __name__ == "__main__": # runnable from command line (see README.md)
+  beer_labels = gen_beer2vec(config.MODEL_NAME, gen_ids(config.TRAINING_CAP), should_overwrite=True)
   logging.debug("Training complete")
