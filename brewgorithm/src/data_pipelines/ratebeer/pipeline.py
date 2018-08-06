@@ -88,15 +88,15 @@ def fetch_beer_reviews(beer_id, review_features=[]):
     yield review_data, row['Comments'].encode('ascii', 'ignore').decode('ascii', 'ignore')
 
 
-def fetch_beer_ids(rating_floor, reviews_floor):
+def fetch_beer_ids(reviews_floor):
   SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252", port=SQL_PORT)
   cursor = conn.cursor(as_dict=True)
   logging.debug('connected to db to fetch beer ids')
   cursor.execute("""
-      select BeerID from Beer where AverageRating >= %s AND BeerID IN 
+      select BeerID from Beer where BeerID IN 
       (select BeerID from BeerRating group by BeerID having count(*) >= %s)
-  """ % (str (rating_floor), str (reviews_floor),))
+  """ % (str (reviews_floor),))
   while True:
     try:
       row = cursor.fetchone()

@@ -15,7 +15,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 def gen_ids(number):
   beer_ids = []
   i = 0
-  for beer_id in data_pipelines.ratebeer.fetch_beer_ids(config.RATING_FLOOR, config.REVIEWS_FLOOR):
+  for beer_id in data_pipelines.ratebeer.fetch_beer_ids(config.REVIEWS_FLOOR):
     beer_ids.append(beer_id)
     i += 1
     if i > number:
