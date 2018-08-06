@@ -33,4 +33,13 @@ If any ids are invalid, you will get back:
 If all ids are valid, you will get back:
 ({'statusCode': 200, 'response':[<recommended_id1>,<recommended_id2>...]}
 
+##### Get beer recommendations based off list of beers from a subset:
+Post request: `$API/recommend_subset`.
+JSON body: `{'ids': [<id1>, <id2>...], 'subset': [<e_id1>, <e_id2>...]}`
+If any ids are invalid, you will get back:
+`{'response': None, 'statusCode': 500}`
+If all ids are valid, you will get back:
+({'statusCode': 200, 'response':[<recommended_id1>,<recommended_id2>...]}
 
+##### Train beers that meet configured rating/# of reviews minimums
+python3 brewgorithm/src/neural/beer2vec/dev/train.py
