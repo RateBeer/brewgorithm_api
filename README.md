@@ -41,5 +41,5 @@ If any ids are invalid, you will get back:
 If all ids are valid, you will get back:
 ({'statusCode': 200, 'response':[<recommended_id1>,<recommended_id2>...]}
 
-##### Train beers that meet configured rating/# of reviews minimums
+##### Train beers that meet configured # of reviews minimum
 python3 brewgorithm/src/neural/beer2vec/dev/train.py

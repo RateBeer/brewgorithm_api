@@ -92,11 +92,11 @@ def fetch_beer_ids(reviews_floor):
   SQL_USR, SQL_PASS = get_sql_credentials()
   conn = pymssql.connect(SQL_SERVER, SQL_USR, SQL_PASS, DATABASE, charset="CP1252", port=SQL_PORT)
   cursor = conn.cursor(as_dict=True)
-  logging.debug('connected to db to fetch beer ids')
+  logging.debug('connected to db to fetch beer ids') # get beers that have a minimum number of reviews
   cursor.execute("""
       select BeerID from Beer where BeerID IN 
       (select BeerID from BeerRating group by BeerID having count(*) >= %s)
-  """ % (str (reviews_floor),))
+  """ % (str(reviews_floor),))
   while True:
     try:
       row = cursor.fetchone()

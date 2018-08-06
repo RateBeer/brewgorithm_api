@@ -86,6 +86,6 @@ def gen_beer2vec(model_name, beer_ids, should_overwrite=False):
 
   return beer_labels
 
-if __name__ == "__main__":
+if __name__ == "__main__": # runnable from command line (see README.md)
   beer_labels = gen_beer2vec(config.MODEL_NAME, gen_ids(config.TRAINING_CAP), should_overwrite=True)
   logging.debug("Training complete")
