@@ -100,7 +100,8 @@ def fetch_beer_ids(rating_floor, reviews_floor):
   while True:
     try:
       row = cursor.fetchone()
-      logging.info("Fetched Beer ID: " + str (row['BeerID']))
+      if row and row['BeerID']:
+        logging.info("Fetched Beer ID: " + str (row['BeerID']))
     except UnicodeDecodeError:
       logging.error('UnicodeDecodeError')
       continue
