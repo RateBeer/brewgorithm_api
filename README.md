@@ -43,3 +43,4 @@ If all ids are valid, you will get back:
 
 ##### Train beers that meet configured # of reviews minimum
 python3 brewgorithm/src/neural/beer2vec/dev/train.py
+

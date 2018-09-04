@@ -11,12 +11,8 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 filter_nulls = language.cleaning.filter_nulls
 
 def getSSMValue(param_name):
-    # Define the endpoint if we have it set.
-    endpoint = os.environ["SSM_ENDPOINT"] or None
-
     ssm = boto3.client('ssm',
-        region_name=os.environ["SSM_AWS_REGION"],
-        endpoint_url=endpoint
+        region_name=os.environ["SSM_AWS_REGION"]
     )
 
     response = ssm.get_parameters(
@@ -118,4 +114,5 @@ def stream_text_corpus():
     for review_data, text in fetch_beer_reviews(beer_id):
       if text:
         yield text
+
 

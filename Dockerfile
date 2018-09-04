@@ -1,5 +1,7 @@
 From tensorflow/tensorflow:latest-py3
 
+ENV BUILD_CACHE=1-30-8-2018
+
 EXPOSE 8000
 EXPOSE 5000
 
