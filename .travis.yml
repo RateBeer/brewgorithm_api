@@ -1,0 +1,29 @@
+sudo: required
+
+# We're using Docker; so to remove defaults, use generic language.
+language: generic
+
+services:
+  - docker
+
+notifications:
+  email: false
+  slack:
+    secure: Jub+/ycSycIePIVU60o1ByXEpMzl22mm9cRVEAks2/hOqs+pcnAIupjojeJ9otrOMNrA5omXRTqo3Ehh5cvj46ryEecGAnrHcfe6Tfn3fzF3mSohw2ILOaVRSKJJY71DpgpOgW/qQZgZC0xEmYiTcItTciC85gPVrEFGvQHOwp0pm5lXrWCyHaQu8GEeJit7+05tV8ENp9efF3jLyHH3xV3lFdQ8YTcoBOv9C+QAYtZSacg8VRKskon7Zq1I1bngiQ8hU8mdfd5WSiIYAMHhgmJLPVTkcV+zOFMrS01waCVYR/pRdOXFjb6tIwyOPc/oQRD/gQGf5q11z8W1c4bKrQfIt2yYsGSR/eBFsOmNcIvlwmWtLKTmsTAPih/9hDfo/03yAuK/tNx1gI4VijV0DvKS7Fj++kwEL7IrpaaYFV1jF5PvDToDYWmro9RGwYemBiNRtJuTLcfu3dorMofws5PkreFWR9syelwGiLMqJNbY9j/vFWdz+ATy9byIi9AgeuIna07dH/qRX8g+0pbSKkYWDrfmHxyHHDelRaY8Js0uw0qweJqin3nhlVwDVEkVQUOxFaPYJ6MKRssMfRPjYIPBoaN1i7k0FtNX45Xjlwe+2vkzZgZP/CCPBTA0tFQx7mctHqyNhqmHv2pNkainYmP2Fn7GTZXTIjrE8JOSXRI=
+
+# Skip the install step.
+install: true
+
+# Ensure that both "Build pushed branches" and "Build pushed pulled requests" so that everything
+# gets triggered; however we then have our conditionals below.
+
+jobs:
+  include:
+    # Always run the tests.
+    - stage: "Tests"
+      script: ./travis/tests.sh
+      if: branch IN (dev, master) OR type = pull_request
+    # Only run the deploy step when we're on dev or master.
+    - stage: "Deploy"
+      if: branch IN (dev, master) AND type != pull_request
+      script: ./travis/deploy.sh
