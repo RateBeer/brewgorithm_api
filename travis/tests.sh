@@ -1,10 +1,10 @@
 #!/bin/bash
 set -ev
 
-# Run the tests
-py.test --cov=./
+IMAGE_NAME=brewgorithm-${TRAVIS_BUILD_NUMBER}-test
 
-# Upload results to codecov
-codecov -t e71480e0-8297-477f-b479-7c2595a58c88
+docker build -t ${IMAGE_NAME} .
+
+docker run ${IMAGE_NAME} /bin/bash -c "py.test --cov=./; codecov -t=${CODECOV_TOKEN}"
 
 exit 0;

@@ -30,7 +30,6 @@ RUN pip3 install codecov
 RUN pip3 install coverage
 
 COPY ./brewgorithm ./brewgorithm
-COPY ./.git ./.git
 
 # Run tests
 #RUN py.test brewgorithm/tests
