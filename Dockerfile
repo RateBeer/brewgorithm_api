@@ -25,11 +25,15 @@ RUN python -m spacy download en
 
 # Install dev-only dependencies
 RUN pip3 install pytest
+RUN pip3 install pytest-cov
+RUN pip3 install codecov
+RUN pip3 install coverage
 
 COPY ./brewgorithm ./brewgorithm
+COPY ./.git ./.git
 
 # Run tests
-RUN py.test brewgorithm/tests
+#RUN py.test brewgorithm/tests
 CMD python3 -m brewgorithm.src.core.flask_api.run
 
 HEALTHCHECK --interval=5s \

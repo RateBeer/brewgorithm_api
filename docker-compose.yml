@@ -1,12 +1,13 @@
 version: '3'
 
 networks:
-  default:
+  ? default
 
 services:
-
   api:
     build: .
+    environment:
+      - COMMIT_HASH
     ports:
       - 5000:5000
       - 8000:8000
