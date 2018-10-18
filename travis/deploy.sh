@@ -42,7 +42,6 @@ docker push ${AWS_ECR_ACCOUNT_ID}.dkr.ecr.${AWS_ECR_REGION}.amazonaws.com/${IMAG
 # Deploy the image with ECS-deploy; roll back upon failure.
 docker run -e AWS_DEFAULT_REGION=${AWS_ECS_REGION} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} silintl/ecs-deploy --use-latest-task-def -c ${AWS_ECS_CLUSTER} -n ${AWS_ECS_SERVICE_NAME} -to ${VERSION_TAG} -i ignore -t 3600 -r ${AWS_ECS_REGION} --enable-rollback
 
-
 # Register the deploy
 case "$TRAVIS_BRANCH" in
 "master")
@@ -50,3 +49,4 @@ case "$TRAVIS_BRANCH" in
     ;;
 *)
 esac
+
