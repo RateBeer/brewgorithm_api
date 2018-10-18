@@ -21,3 +21,9 @@ editdistance
 
 # AWS
 boto3
+
+# Tests
+pytest
+pytest-cov
+codecov
+coverage
