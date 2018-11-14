@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/RateBeer/brewgorithm_api/branch/master/graph/badge.svg?token=9LYaPCNblT)](https://codecov.io/gh/RateBeer/brewgorithm_api)
+[![codecov](https://codecov.io/gh/RateBeer/brewgorithm_api/branch/master/graph/badge.svg?token=9LYaPCNblT)](https://codecov.io/gh/RateBeer/brewgorithm_api) [![Build Status](https://travis-ci.com/RateBeer/brewgorithm_api.svg?token=T2ttsRBxCEzfp8zVPhTP&branch=dev)](https://travis-ci.com/RateBeer/brewgorithm_api)
 
 ### Requirements
 
